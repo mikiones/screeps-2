@@ -7,7 +7,7 @@ var roleHarvester = {
 		if(creep.carry.energy < creep.carryCapacity) {
 			var harvest_src = creep.memory.harvest_src;
 			if (!harvest_src) {
-				harvest_src = util.choice(creep.room.find(FIND_SOURCES));
+				harvest_src = creep.pos.findClosestByPath(FIND_SOURCES);
 				creep.memory.harvest_src = harvest_src.id;
 			} else {
 				harvest_src = Game.getObjectById(harvest_src);
