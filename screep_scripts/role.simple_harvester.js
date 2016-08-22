@@ -1,11 +1,17 @@
+var util = require('util');
+
 var roleHarvester = {
 
 	/** @param {Creep} creep **/
 	run: function(creep) {
 		if(creep.carry.energy < creep.carryCapacity) {
-			var nearest = creep.pos.findClosestByRange(FIND_SOURCES);
-			if(creep.harvest(nearest) == ERR_NOT_IN_RANGE) {
-				creep.moveTo(nearest);
+			var harvest_src = creep.memory.harvest_src;
+			if (!harvest_src) {
+				harvest_src = util.choice(creep.room.find(FIND_SOURCES));
+				creep.memory.harvest_src = harvest_src;
+			}
+			if(creep.harvest(harvest_src) == ERR_NOT_IN_RANGE) {
+				creep.moveTo(harvest_src);
 			}
 		}
 		else if(Game.spawns['Spawn1'].energy < Game.spawns['Spawn1'].energyCapacity) {
@@ -13,6 +19,9 @@ var roleHarvester = {
 				creep.moveTo(Game.spawns['Spawn1']);
 			}
 		}
+	}
+	spawn: function(spawner) {
+		spawner.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], "HARVESTER".concat(util.make_id()));
 	}
 };
 
