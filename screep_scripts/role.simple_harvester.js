@@ -12,6 +12,10 @@ var roleHarvester = {
 			var harvest_src = creep.memory.harvest_src;
 			if (!harvest_src) {
 				harvest_src = creep.pos.findClosestByPath(FIND_SOURCES);
+				if (harvest_src == null) {
+					creep.moveTo(Game.spawns['Spawn1']);
+					return
+				}
 				creep.memory.harvest_src = harvest_src.id;
 			} else {
 				harvest_src = Game.getObjectById(harvest_src);
