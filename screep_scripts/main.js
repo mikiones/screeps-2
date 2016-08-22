@@ -14,8 +14,8 @@ function spawn_screep() {
 }
 
 module.exports.loop = function () {
-	if (Game.spawns['Spawn1'].energy > 300) {
-		spawn_screep()
+	if (Game.spawns['Spawn1'].energy >= 300) {
+		spawn_screep();
 	}
 	for(var name in Game.creeps) {
 		var creep = Game.creeps[name];
