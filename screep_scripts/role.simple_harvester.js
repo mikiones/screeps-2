@@ -19,7 +19,7 @@ var roleHarvester = {
 				creep.moveTo(Game.spawns['Spawn1']);
 			}
 		}
-	}
+	},
 	spawn: function(spawner) {
 		spawner.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], "HARVESTER".concat(util.make_id()));
 	}
