@@ -1,4 +1,4 @@
-var spawner = {
+var roleSpawner = {
 	analyze_sources : function(spawner) {
 		var mining_slots = {};
 		var sources = spawner.room.find(FIND_SOURCES);
@@ -11,4 +11,4 @@ var spawner = {
 	},
 }
 
-module.exports = spawner;
+module.exports = roleSpawner;
