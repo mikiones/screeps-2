@@ -1,4 +1,5 @@
 var roleHarvester = require('role.simple_harvester');
+var roleHarvester = require('role.simple_upgrader');
 
 function make_id() {
 	var text = "";
