@@ -1,5 +1,5 @@
 var spawner = {
-	anaylze_sources : function(spawner) {
+	analyze_sources : function(spawner) {
 		var mining_slots = {};
 		var sources = spawner.room.find(FIND_SOURCES);
 		for (source in sources) {
