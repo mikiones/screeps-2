@@ -10,7 +10,7 @@ function make_id() {
 }
 
 function spawn_screep() {
-	Game.spawns['Spawn1'].createCreep( [WORK, WORK, CARRY, CARRY, MOVE], 'Harvester'.concat(make_id()) );
+	Game.spawns['Spawn1'].createCreep( [WORK, WORK, CARRY, MOVE], 'HARVESTER.'.concat(make_id()) );
 }
 
 module.exports.loop = function () {
