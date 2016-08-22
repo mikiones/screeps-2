@@ -16,7 +16,7 @@ module.exports.loop = function () {
 		if (role == "HARVESTER") {
 			roleHarvester.run(creep);
 		} else if (role == "UPGRADER") {
-	Game.spawns['Spawn1'].memory.upgrader_active = true;
+			Game.spawns['Spawn1'].memory.upgrader_active = true;
 			roleUpgrader.run(creep);
 		}
 	});
