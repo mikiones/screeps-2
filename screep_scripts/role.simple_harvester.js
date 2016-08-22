@@ -24,7 +24,12 @@ var roleHarvester = {
 				creep.memory.harvest_src = undefined;
 			}
 		} else {
-			roleUpgrader.run(creep)
+			var target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+			if(target) {
+				if(creep.build(target) == ERR_NOT_IN_RANGE) {
+					creep.moveTo(target);
+				}
+			}
 		}
 	},
 	spawn: function(spawner) {
