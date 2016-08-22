@@ -7,9 +7,8 @@ var spawner = {
 			mining_slots[source.id].slots = _.filter(source_area, (obj) => obj.type == 'terrain' && obj.terrain != 'wall').length;
 			mining_slots[source.id].path_from_spawner = spawner.pos.findPathTo(source.pos, {ignoreCreeps : true, ignoreRoads : true})
 		}
-		return mining_slots;
+		spawner.memory.source_info = mining_slots;
 	},
-	spawner.memory.source_info = mining_slots;
 }
 
 module.exports = spawner;
