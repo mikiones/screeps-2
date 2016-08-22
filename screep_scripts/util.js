@@ -6,7 +6,7 @@ var util = {
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
 		}
 		return text;
-	}
+	},
 	choice : function(arr) {
 		return arr[Math.floor(Math.random() * arr.length)];
 	}
