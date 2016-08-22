@@ -7,5 +7,5 @@ module.exports.loop = function () {
 	}
 	_.forIn(Game.creeps, function(name, creep) {
 		roleHarvester.run(creep);
-	};
+	});
 }
