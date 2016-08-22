@@ -37,7 +37,7 @@ var roleHarvester = {
 		}
 	},
 	spawn: function(spawner) {
-		spawner.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], "HARVESTER:".concat(util.make_id()));
+		spawner.createCreep([WORK, WORK, CARRY, MOVE], "HARVESTER:".concat(util.make_id()));
 	}
 };
 
