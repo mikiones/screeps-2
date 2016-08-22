@@ -8,7 +8,9 @@ var roleHarvester = {
 			var harvest_src = creep.memory.harvest_src;
 			if (!harvest_src) {
 				harvest_src = util.choice(creep.room.find(FIND_SOURCES));
-				creep.memory.harvest_src = harvest_src;
+				creep.memory.harvest_src = harvest_src.id;
+			} else {
+				harvest_src = Game.getObjectById(harvest_src);
 			}
 			if(creep.harvest(harvest_src) == ERR_NOT_IN_RANGE) {
 				creep.moveTo(harvest_src);
