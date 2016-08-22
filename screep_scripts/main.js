@@ -10,11 +10,13 @@ function make_id() {
 }
 
 function spawn_screep() {
-	Game.spawns['Spawn1'].createCreep( [WORK, CARRY, MOVE], 'Harvester'.concat(make_id()) );
+	Game.spawns['Spawn1'].createCreep( [WORK, WORK, CARRY, CARRY, MOVE], 'Harvester'.concat(make_id()) );
 }
 
 module.exports.loop = function () {
-
+	if (Game.spawns['Spawn1'].energy > 300) {
+		spawn_screep()
+	}
 	for(var name in Game.creeps) {
 		var creep = Game.creeps[name];
 		roleHarvester.run(creep);
