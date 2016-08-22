@@ -5,7 +5,10 @@ var roleHarvester = {
 
 	/** @param {Creep} creep **/
 	run: function(creep) {
-		if(creep.carry.energy < creep.carryCapacity) {
+		if (creep.carry.energy == 0) {
+			creep.memory.building = false;
+		}
+		if (creep.carry.energy < creep.carryCapacity && !creep.memory.building) {
 			var harvest_src = creep.memory.harvest_src;
 			if (!harvest_src) {
 				harvest_src = creep.pos.findClosestByPath(FIND_SOURCES);
@@ -24,6 +27,7 @@ var roleHarvester = {
 				creep.memory.harvest_src = undefined;
 			}
 		} else {
+			creep.memory.building = true;
 			var target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
 			if(target) {
 				if(creep.build(target) == ERR_NOT_IN_RANGE) {
