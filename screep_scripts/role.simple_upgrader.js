@@ -3,7 +3,10 @@ var util = require('util');
 var roleUpgrader = {
 	/** @param {Creep} creep **/
 	run: function(creep) {
-		if(creep.carry.energy < creep.carryCapacity) {
+		if (creep.carry.energy == 0) {
+			creep.memory.upgrading = false;
+		}
+		if (creep.carry.energy < creep.carryCapacity && !creep.memory.upgrading) {
 			var harvest_src = creep.memory.harvest_src;
 			if (!harvest_src) {
 				harvest_src = creep.pos.findClosestByPath(FIND_SOURCES);
@@ -16,6 +19,7 @@ var roleUpgrader = {
 			}
 		}
 		else {
+			creep.memory.upgrading = true;
 			if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
 				creep.moveTo(creep.room.controller);
 			} else {
