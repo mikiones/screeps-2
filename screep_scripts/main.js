@@ -7,9 +7,9 @@ module.exports.loop = function () {
 	}
 	_.forIn(Game.creeps, function(creep, name) {
 		var role = name.split(":")[0]
-		if role == "HARVESTER" {
+		if (role == "HARVESTER") {
 			roleHarvester.run(creep);
-		} else if role == "UPGRADER" {
+		} else if (role == "UPGRADER") {
 			roleUpgrader.run(creep);
 		}
 	});
