@@ -1,5 +1,6 @@
-var roleUpgrader = {
+var util = require('util');
 
+var roleUpgrader = {
 	/** @param {Creep} creep **/
 	run: function(creep) {
 		if(creep.carry.energy == 0) {
@@ -13,6 +14,9 @@ var roleUpgrader = {
 				creep.moveTo(creep.room.controller);
 			}
 		}
+	},
+	spawn: function(spawner) {
+		spawner.createCreep([WORK, CARRY, MOVE, MOVE, MOVE], "UPGRADER:".concat(util.make_id()));
 	}
 };
 
