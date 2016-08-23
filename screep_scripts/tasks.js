@@ -81,6 +81,12 @@ function default_fill(creep, cmd) {
 }
 var UPGRADE = 'UPGRADE';
 function default_upgrade(creep, cmd) {
+	return default_harvest_work(
+		creep, cmd, function(target) {
+			return 1000;
+		}, function(creep, target) {
+			creep.upgradeController(target);
+		});
 }
 
 function make_cmd(cmd_type) {
