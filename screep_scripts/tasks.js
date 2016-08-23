@@ -11,7 +11,9 @@ function harvest(creep) {
 			console.log("COULD NOT FIND SOURCE");
 			return;
 		}
-		creep.memory.harvest_src = harvest_src;
+		creep.memory.harvest_src = harvest_src.id;
+	} else {
+		harvest_src = Game.getObjectById(harvest_src);
 	}
 	if (creep.harvest(harvest_src) == ERR_NOT_IN_RANGE) {
 		creep.moveTo(harvest_src);
