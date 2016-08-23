@@ -56,7 +56,11 @@ var BUILD = 'BUILD';
 function default_build(creep, cmd) {
 	return default_harvest_work(
 		creep, cmd, function(target) {
-			return target.progressTotal - target.progress;
+			if (target) {
+				return target.progressTotal - target.progress;
+			} else {
+				return 0;
+			}
 		}, function(creep, target) {
 			return creep.build(target);
 		});
