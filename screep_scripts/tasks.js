@@ -21,7 +21,7 @@ function harvest(creep) {
 }
 function default_harvest_work(creep, cmd, work_remaining_func, work_func) {
 	var target = Game.getObjectById(cmd.target_id);
-	var work_remaining = work_remaining_func(target);
+	var work_remaining = work_remaining_func(creep, target);
 	if (!target) {
 		creep.memory.state = null;
 		return FAILURE;
@@ -45,7 +45,7 @@ function default_harvest_work(creep, cmd, work_remaining_func, work_func) {
 			creep.moveTo(target);
 		}
 	}
-	work_remaining = work_remaining_func(target);
+	work_remaining = work_remaining_func(creep, target);
 	if (work_remaining <= 0) {
 		return SUCCESS;
 	}
@@ -55,7 +55,7 @@ function default_harvest_work(creep, cmd, work_remaining_func, work_func) {
 var BUILD = 'BUILD';
 function default_build(creep, cmd) {
 	return default_harvest_work(
-		creep, cmd, function(target) {
+		creep, cmd, function(creep, target) {
 			if (target) {
 				return target.progressTotal - target.progress;
 			} else {
@@ -71,7 +71,7 @@ function default_fill(creep, cmd) {
 		return FAILURE;
 	}
 	return default_harvest_work(
-		creep, cmd, function(target) {
+		creep, cmd, function(creep, target) {
 			var str = cmd.args.store_type;
 			var strCapacity = str.concat('Capacity');
 			return target[strCapacity] - target[str];
@@ -82,8 +82,8 @@ function default_fill(creep, cmd) {
 var UPGRADE = 'UPGRADE';
 function default_upgrade(creep, cmd) {
 	return default_harvest_work(
-		creep, cmd, function(target) {
-			return 1000;
+		creep, cmd, function(creep, target) {
+			return creep.carry.energy;
 		}, function(creep, target) {
 			return creep.upgradeController(target);
 		});
