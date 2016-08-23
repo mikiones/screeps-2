@@ -12,7 +12,7 @@ var roleSpawner = {
 		_.forIn(path, function(loc, step) {
 			src.room.createConstructionSite(loc.x, loc.y, STRUCTURE_ROAD);
 		});
-	}
+	},
 	analyze_sources : function(spawner) {
 		var mining_slots = {};
 		var sources = spawner.room.find(FIND_SOURCES);
