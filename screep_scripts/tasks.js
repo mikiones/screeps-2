@@ -52,7 +52,7 @@ function default_harvest_work(creep, cmd, work_remaining_func, work_func) {
 	return INPROGRESS;
 }
 
-var BUILD = 'build';
+var BUILD = 'BUILD';
 function default_build(creep, cmd) {
 	return default_harvest_work(
 		creep, cmd, function(target) {
@@ -61,7 +61,7 @@ function default_build(creep, cmd) {
 			return creep.build(target);
 		});
 }
-var FILL = 'fill';
+var FILL = 'FILL';
 function default_fill(creep, cmd) {
 	if (!cmd.args.store_type) {
 		return FAILURE;
