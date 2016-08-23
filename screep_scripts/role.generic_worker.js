@@ -8,6 +8,9 @@ var genericWorker = {
 		}
 		var res = tasks.default_behavior(creep, creep.memory.cmd);
 		if (res == tasks.SUCCESS || res == tasks.FAILURE) {
+			console.log(creep.name);
+			console.log(creep.memory.cmd);
+			console.log(res);
 			creep.memory.cmd = null;
 		}
 	},
