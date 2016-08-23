@@ -33,7 +33,7 @@ function default_harvest_work(creep, cmd, work_remaining_func, work_func) {
 	if (!creep.memory.state) {
 		creep.memory.state = cmd.cmd_type;
 	}
-	if (creep.memory.state == HARVEST && (creep.carry.energy >= work_remaining || creep.carry.energy >= creep.carryCapacity)) {
+	if (creep.memory.state == HARVEST && (creep.carry.energy >= creep.carryCapacity)) {
 		creep.memory.state = cmd.cmd_type;
 	} else if (creep.memory.state == cmd.cmd_type && creep.carry.energy <= 0) {
 		creep.memory.state = HARVEST;
