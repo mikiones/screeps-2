@@ -15,7 +15,7 @@ function new_work(creep) {
 		creep.memory.cmd = tasks.tasks.FILL.make_cmd(Game.spawns['Spawn1'].id, {store_type : 'energy'});
 	} else if (!spawner.memory.upgrader || !Game.getObjectById(spawner.memory.upgrader)) {
 		spawner.memory.upgrader = creep.id;
-		creep.memory.cmd = tasks.tasks.UPGRADE
+		creep.memory.cmd = tasks.tasks.UPGRADE.make_cmd(creep.room.controller.id, {});
 	} else if (active_creeps < min_creeps) {
 		creep.memory.cmd = tasks.tasks.FILL.make_cmd(Game.spawns['Spawn1'].id, {store_type : 'energy'});
 	} else {
