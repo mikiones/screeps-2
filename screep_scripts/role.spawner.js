@@ -29,10 +29,10 @@ var roleSpawner = {
 	},
 	analyze_rc : function(spawner) {
 		roleSpawner.add_construction_path(spawner, spawner.room.controller);
-		var sources = spawner.room.find(FIND_SOURCES);
-		_.forIn(sources, function(source, source_id) {
-			roleSpawner.add_construction_path(spawner.room.controller, source);
-		});
+		//var sources = spawner.room.find(FIND_SOURCES);
+		//_.forIn(sources, function(source, source_id) {
+		//	roleSpawner.add_construction_path(spawner.room.controller, source);
+		//});
 	},
 }
 
