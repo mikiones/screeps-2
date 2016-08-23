@@ -8,7 +8,12 @@ var tasks = require('tasks');
 var test_run = false;
 
 function new_work(creep) {
-	creep.memory.cmd = tasks.tasks.FILL.make_cmd(Game.spawns['Spawn1'].id, {store_type : 'energy'});
+	var target_build = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+	if (target_build) {
+		creep.memory.cmd = tasks.tasks.BUILD.make_cmd(target_build.id, {});
+	} else {
+		creep.memory.cmd = tasks.tasks.FILL.make_cmd(Game.spawns['Spawn1'].id, {store_type : 'energy'});
+	}
 }
 
 if (test_run) {
