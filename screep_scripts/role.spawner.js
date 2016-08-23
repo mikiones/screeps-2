@@ -8,7 +8,7 @@ var roleSpawner = {
 			mining_slots[source_id].slots = _.filter(source_area, (obj) => obj.type == 'terrain' && obj.terrain != 'wall').length;
 			mining_slots[source_id].path_from_spawner = spawner.pos.findPathTo(source.pos, {ignoreCreeps : true, ignoreRoads : true});
 			_.forIn(mining_slots[source_id].path_from_spawner, function(loc, step) {
-				Game.createConstructionSite(loc.x, loc.y, STRUCTURE_ROAD);
+				spawner.room.createConstructionSite(loc.x, loc.y, STRUCTURE_ROAD);
 			});
 		});
 		spawner.memory.source_info = mining_slots;
