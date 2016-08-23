@@ -23,7 +23,7 @@ function new_work(creep) {
 		if (target_build) {
 			creep.memory.cmd = tasks.tasks.BUILD.make_cmd(target_build.id, {});
 		} else {
-			creep.memory.cmd = tasks.tasks.FILL.make_cmd(Game.spawns['Spawn1'].id, {store_type : 'energy'});
+			creep.memory.cmd = tasks.tasks.UPGRADE.make_cmd(creep.room.controller.id, {});
 		}
 	}
 }
