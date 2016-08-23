@@ -45,7 +45,7 @@ function default_harvest_work(creep, cmd, work_remaining_func, work_func) {
 			creep.moveTo(target);
 		}
 	}
-	work_remaining = target.progressTotal - target.progress;
+	work_remaining = work_remaining_func(target);
 	if (work_remaining <= 0) {
 		return SUCCESS;
 	}
