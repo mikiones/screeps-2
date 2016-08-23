@@ -3,6 +3,7 @@ var roleUpgrader = require('role.simple_upgrader');
 var roleWorker = require('role.generic_worker');
 var roleSpawner = require('role.spawner');
 var util = require('util');
+var tasks = require('tasks');
 
 var test_run = false;
 
