@@ -1,4 +1,12 @@
 var roleSpawner = {
+	init : function(spawner) {
+		if (spawner.memory.init) {
+			return;
+		}
+		roleSpawner.analyze_sources(spawner);
+		roleSpawner.analyze_rc(spawner);
+		spawner.memory.init = true;
+	},
 	analyze_sources : function(spawner) {
 		var mining_slots = {};
 		var sources = spawner.room.find(FIND_SOURCES);
@@ -12,6 +20,13 @@ var roleSpawner = {
 			});
 		});
 		spawner.memory.source_info = mining_slots;
+	},
+	analyze_rc : function(spawner) {
+		var rc_slot = {};
+		rc_slot.path_from_spawner = spawner.pos.findPathTo(spawner.room.controller.pos, {ignoreCreeps : true, ignoreRoads : true});
+		_.forIn(rc_slot.path_from_spawner, function(loc, step) {
+			spawner.room.createConstructionSite(loc.x, loc.y, STRUCTURE_ROAD);
+		});
 	},
 }
 

@@ -79,6 +79,9 @@ function default_fill(creep, cmd) {
 			return creep.transfer(target, RESOURCE_ENERGY);
 		});
 }
+var UPGRADE = 'UPGRADE';
+function default_upgrade(creep, cmd) {
+}
 
 function make_cmd(cmd_type) {
 	return function(target_id, args){
@@ -100,6 +103,7 @@ function make_task(cmd_type, default_behavior) {
 var all_tasks = {
 	BUILD : make_task(BUILD, default_build),
 	FILL : make_task(FILL, default_fill),
+	UPGRADE : make_task(UPGRADE, default_upgrade),
 };
 
 function default_behavior(creep, cmd) {

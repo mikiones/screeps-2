@@ -19,10 +19,7 @@ function new_work(creep) {
 if (test_run) {
 	module.exports.loop = function () {
 		var spawner = Game.spawns['Spawn1'];
-		if (!spawner.memory.sources_analyzed) {
-			roleSpawner.analyze_sources(spawner);
-			spawner.memory.sources_analyzed = true;
-		}
+		roleSpawner.init(spawner);
 		if (spawner.energy >= 300 && Object.keys(Game.creeps).length < 5) {
 			roleWorker.spawn(spawner);
 		}
