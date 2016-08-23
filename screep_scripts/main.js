@@ -6,6 +6,8 @@ var util = require('util');
 var test_run = false;
 
 if (test_run) {
+	module.exports.loop = function () {
+	};
 } else {
 	module.exports.loop = function () {
 		var spawner = Game.spawns['Spawn1'];
