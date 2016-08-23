@@ -85,7 +85,7 @@ function default_upgrade(creep, cmd) {
 		creep, cmd, function(target) {
 			return 1000;
 		}, function(creep, target) {
-			creep.upgradeController(target);
+			return creep.upgradeController(target);
 		});
 }
 
