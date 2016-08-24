@@ -2,9 +2,9 @@ var tasks = require('tasks')
 var util = require('util')
 
 var genericWorker = {
-	run : function (creep, new_work_func) {
+	run : function (spawner, creep, new_work_func) {
 		if (!creep.memory.cmd) {
-			new_work_func(creep);
+			new_work_func(spawner, creep);
 		}
 		var res = tasks.default_behavior(creep, creep.memory.cmd);
 		if (res == tasks.SUCCESS || res == tasks.FAILURE) {
