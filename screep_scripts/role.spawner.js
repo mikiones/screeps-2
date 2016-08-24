@@ -1,4 +1,3 @@
-var util = require('util');
 var tasks = require('tasks');
 var roleWorker = require('role.generic_worker');
 
@@ -34,14 +33,13 @@ var roleSpawner = {
 		});
 	},
 	analyze_sources : function(spawner) {
-		var mining_slots = {};
 		var sources = spawner.room.find(FIND_SOURCES);
-		_.forIn(sources, function(source, source_id) {
+		spawner.memory.source_info = _.reduce(sources, function(mining_slots, source, source_id) {
 			mining_slots[source_id] = {};
 			var source_area = spawner.room.lookAtArea(source.pos.y+1, source.pos.x-1, source.pos.y-1, source.pos.x+1, true);
 			mining_slots[source_id].slots = _.filter(source_area, (obj) => obj.type == 'terrain' && obj.terrain != 'wall').length;
 			roleSpawner.add_construction_path(spawner, source);
-		});
+		}, {});
 		spawner.memory.source_info = mining_slots;
 	},
 	analyze_rc : function(spawner) {
@@ -56,7 +54,7 @@ var roleSpawner = {
 		spawner.memory.task_mode = SPAWN_MODE;
 	},
 	assign_work : function(spawner, creep) {
-		var active_creeps = Object.keys(Game.creeps).length;
+		var active_creeps = _.size(Game.creeps);
 		if (active_creeps < min_creeps/2) {
 			creep.memory.cmd = tasks.tasks.FILL.make_cmd(Game.spawns['Spawn1'].id, {store_type : 'energy'});
 		} else if (!spawner.memory.upgrader || !Game.getObjectById(spawner.memory.upgrader) || creep.id == spawner.memory.upgrader) {
@@ -75,12 +73,22 @@ var roleSpawner = {
 	},
 	energy_deficit : function(spawner) {
 		var deficit = spawner.energyCapacity - spawner.energy;
-		var extensions = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_EXTENSION);
-		for(var ext in extensions) {
-			deficit += ext.energyCapacity - ext.energy;
-		}
+		deficit += _.reduce(Game.structures, function(result, value, key){
+			if(value.structureType == STRUCTURE_EXTENSION) {
+				result += value.energyCapacity - value.energy;
+			}
+			return result;
+		}, 0);
 		return deficit;
 	},
+	energy_available : function(spawner) {
+		return spawner.energy + _.reduce(Game.structures, function(result, struct, key) {
+			if (struct.structureType == STRUCTURE_EXTENSION) {
+				result += value.energy;
+			}
+			return result;
+		}, 0);
+	}
 	assign_work_2 : function(spawner, creep) {
 		if (spawner.memory.task_mode == SPAWN_MODE) {
 			var next_cmd = [];
@@ -96,19 +104,19 @@ var roleSpawner = {
 			if (next_cmd.length == 0) {
 				creep.memory.cmd = tasks.tasks.FILL.make_cmd(spawner.id, {store_type : 'energy'});
 			} else {
-				creep.memory.cmd = util.choice(next_cmd);
+				creep.memory.cmd = _.sample(next_cmd);
 			}
 		} else if (spawner.memory.task_mode == UPGRADE_MODE) {
 		}
 	},
 	spawn_creep : function(spawner) {
-		if (spawner.energy >= 300 && Object.keys(Game.creeps).length < max_creeps) {
+		if (spawner.energy >= 300 && _.size(Game.creeps) < max_creeps) {
 			roleWorker.spawn(spawner);
 		}
 	},
 	spawn_creep_2 : function(spawner) {
 		var deficit_energy = roleSpawner.energy_deficit(spawner);
-		if (deficit_energy <= 0 && Object.keys(Game.creeps).length < max_creeps) {
+		if (deficit_energy <= 0 && _.size(Game.creeps) < max_creeps) {
 			roleWorker.spawn(spawner);
 		}
 	},
