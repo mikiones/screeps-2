@@ -48,7 +48,7 @@ var roleSpawner = {
 		//_.forIn(sources, function(source, source_id) {
 		//	roleSpawner.add_construction_path(spawner.room.controller, source);
 		//});
-	}
+	},
 	initialize_tasks : function(spawner) {
 		spawner.memory.task_list = {}; // {target_id : [{cmd, args, status}]
 		spawner.memory.task_mode = SPAWN_MODE;
