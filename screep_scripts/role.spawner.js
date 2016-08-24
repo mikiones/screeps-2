@@ -90,7 +90,11 @@ var roleSpawner = {
 					next_cmd.push(tasks.tasks.FILL.make_cmd(ext.id, {store_type : 'energy'}));
 				}
 			}
-			creep.memory.cmd = util.choice(next_cmd);
+			if (next_cmd.length == 0) {
+				creep.memory.cmd = tasks.tasks.FILL.make_cmd(spawner.id, {store_type : 'energy'});
+			} else {
+				creep.memory.cmd = util.choice(next_cmd);
+			}
 		} else if (spawner.memory.task_mode == UPGRADE_MODE) {
 		}
 	},
