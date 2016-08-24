@@ -23,6 +23,7 @@ var roleSpawner = {
 		} else if (!spawner.memory.tasks_init) {
 			roleSpawner.initialize_tasks(spawner);
 			spawner.memory.tasks_init = true;
+			spawner.memory.task_mode = SPAWN_MODE;
 		}
 	},
 	add_construction_path : function(src, dst) {
@@ -80,7 +81,7 @@ var roleSpawner = {
 	},
 	assign_work_2 : function(spawner, creep) {
 		if (spawner.memory.task_mode == SPAWN_MODE) {
-			next_cmd = [];
+			var next_cmd = [];
 			if (spawner.energy < spawner.energyCapacity) {
 				next_cmd.push(tasks.tasks.FILL.make_cmd(spawner.id, {store_type : 'energy'}));
 			}
