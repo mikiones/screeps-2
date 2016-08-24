@@ -1,3 +1,4 @@
+var util = require('util');
 var tasks = require('tasks');
 var roleWorker = require('role.generic_worker');
 
@@ -78,6 +79,7 @@ var roleSpawner = {
 		for(var ext in extensions) {
 			deficit += ext.energyCapacity - ext.energy;
 		}
+		return deficit;
 	},
 	assign_work_2 : function(spawner, creep) {
 		if (spawner.memory.task_mode == SPAWN_MODE) {
