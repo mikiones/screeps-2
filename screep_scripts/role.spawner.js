@@ -1,3 +1,5 @@
+var tasks = require('tasks');
+
 var min_creeps = 7;
 var max_creeps = 15;
 

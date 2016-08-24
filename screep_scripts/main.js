@@ -1,7 +1,6 @@
 var roleWorker = require('role.generic_worker');
 var roleSpawner = require('role.spawner');
 var util = require('util');
-var tasks = require('tasks');
 
 module.exports.loop = function () {
 	var spawner = Game.spawns['Spawn1'];
