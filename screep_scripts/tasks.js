@@ -83,14 +83,14 @@ var UPGRADE = 'UPGRADE';
 function default_upgrade(creep, cmd) {
 	return default_harvest_work(
 		creep, cmd, function(creep, target) {
-			var progress_remaining;
-			if (progress_remaining < 200) {
-				progress_remaining = target.progressTotal - target.progress;
-			} else if (!creep.memory.rc_progress) {
-				creep.memory.rc_progress = target.progress;
-				progress_remaining = 200 + creep.memory.rc_progress - target.progress;
-			} else {
-				progress_remaining = 200 + creep.memory.rc_progress - target.progress;
+			var progress_remaining = target.progressTotal - target.progress;
+			if (progress_remaining > 200) {
+				if (!creep.memory.rc_progress) {
+					creep.memory.rc_progress = target.progress;
+					progress_remaining = 200 + creep.memory.rc_progress - target.progress;
+				} else {
+					progress_remaining = 200 + creep.memory.rc_progress - target.progress;
+				}
 			}
 			if (progress_remaining <= 0) {
 				creep.memory.rc_progress = null;
