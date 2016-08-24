@@ -57,6 +57,11 @@ var roleSpawner = {
 			}
 		}
 	},
+	spawn_creep : function(spawner) {
+		if (spawner.energy >= 300 && Object.keys(Game.creeps).length < max_creeps) {
+			roleWorker.spawn(spawner);
+		}
+	},
 }
 
 module.exports = roleSpawner;
