@@ -1,3 +1,6 @@
+var min_creeps = 7;
+var max_creeps = 15;
+
 var roleSpawner = {
 	init : function(spawner) {
 		if (spawner.memory.sources_init && spawner.memory.rc_init) {

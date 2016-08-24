@@ -3,9 +3,6 @@ var roleSpawner = require('role.spawner');
 var util = require('util');
 var tasks = require('tasks');
 
-var min_creeps = 7;
-var max_creeps = 15;
-
 module.exports.loop = function () {
 	var spawner = Game.spawns['Spawn1'];
 	roleSpawner.init(spawner);
