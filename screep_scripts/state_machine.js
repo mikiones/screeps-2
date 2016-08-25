@@ -98,4 +98,5 @@ module.exports = {
 	energy_state_machine : energy_state_machine,
 	behavior_loop : behavior_loop,
 	behavior : behavior,
+	harvest_behavior : harvest_behavior,
 };
