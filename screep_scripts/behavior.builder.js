@@ -2,8 +2,13 @@ var sm = require('state_machine');
 
 var builder_behavior = new sm.energy_tasker('builder',
 	function(actor, state) {
-		var containers = actor.room.find(FIND_STRUCTURES);
+		var containers = actor.room.find(FIND_STRUCTURES, {
+			filter : (struct) => struct.structureType == STRUCTURE_CONTAINER && struct.store.energy > 0,
+		});
 		if (_.size(containers) > 0) {
+			var target = containers[0];
+			if (actor.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+				actor.moveTo(target);
 		} else {
 			//Scavenge
 			var target = actor.pos.findClosestByPath(FIND_DROPPED_ENERGY);
