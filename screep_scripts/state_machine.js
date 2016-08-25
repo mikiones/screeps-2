@@ -45,14 +45,20 @@ function behavior(name, machine, initial_state, handle_states) {
 	this.initial_state = initial_state;
 	this.handle_states = handle_states;
 	this.run = function(actor) {
+		var store_str = this.name.concat('_state');
 		if (actor.memory.behavior != this.name) {
-			actor.memory[actor.memory.behavior.concat('_state')] = null;
+			if (actor.memory.behavior) {
+				actor.memory[actor.memory.behavior.concat('_state')] = null;
+			}
 			actor.memory.behavior = this.name;
-			actor.memory[this.name.concat('_state')] = this.initial_state;
+			actor.memory[store_str] = null;
 		}
-		var state = actor.memory[this.name.concat('_state')];
+		if (!actor.memory[store_str]) {
+			actor.memory[store_str] = this.initial_state;
+		}
+		var state = actor.memory[store_str];
 		var state_p = this.machine.resolve_machine(actor, state);
-		actor.memory[this.name.concat('_state')] = state_p;
+		actor.memory[store_str] = state_p;
 		handle_states[state_p](actor, state_p);
 	};
 }
@@ -75,22 +81,22 @@ function behavior_loop(name, behaviors, terminal_states) {
 }
 
 var energy_state_machine = new state_machine({
-	'NOTFULL' : {state_p : 'FULL', cond : function(actor, state) { return actor.carry.energy >= actor.carryCapacity; } },
-	'FULL' : {state_p : 'NOTFULL', cond : function(actor, state) { return actor.carry.energy < actor.carryCapacity; } },
+	'NOTFULL' : [{state_p : 'FULL', cond : function(actor, state) { return actor.carry.energy >= actor.carryCapacity; } }],
+	'FULL' : [{state_p : 'NOTFULL', cond : function(actor, state) { return actor.carry.energy < actor.carryCapacity; } }],
 });
 
 var harvest_behavior = new behavior('harvest', energy_state_machine, 'NOTFULL', {
 	'NOTFULL' : function(actor, state) {
 		console.log('NOTFULL, MINING');
 		var src = actor.pos.findClosestByPath(FIND_SOURCES);
-		if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
-			creep.moveTo(src);
+		if (actor.harvest(src) == ERR_NOT_IN_RANGE) {
+			actor.moveTo(src);
 		}
 	},
 	'FULL' : function(actor, state) {
 		console.log('FULL');
-		if (creep.transfer(Game.spawns['Spawn1']) == ERR_NOT_IN_RANGE) {
-			creep.moveTo(Game.spawns['Spawn1']);
+		if (actor.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+			actor.moveTo(Game.spawns['Spawn1']);
 		}
 	},
 });
