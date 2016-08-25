@@ -7,7 +7,7 @@
 function state_machine(transitions) {
 	this.transitions = transitions;
 	this.step_machine = function(actor, state) {
-		var state_p = _.first(this.transitions[state], function(transition) {
+		var state_p = _.find(this.transitions[state], function(transition) {
 			return transition.cond(actor, state);
 		});
 		if (state_p) {
