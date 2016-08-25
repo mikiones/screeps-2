@@ -15,9 +15,15 @@ var harvest_behavior = new sm.behavior('harvest', energy_machine, 'NOTFULL', {
 	},
 	'FULL' : function(actor, state) {
 		console.log('FULL, NOTMINING');
-		if (actor.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-			actor.moveTo(Game.spawns['Spawn1']);
-		}
+		var containers = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_CONTAINER);
+		if (_.size(containers) != 0) {
+		} else {
+			var spawners = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_CONTAINER);
+			if (_.size(spawners) == 1) {
+				if (actor.transfer(spawners[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+					actor.moveTo(spawners[0]);
+				}
+			}
 	},
 });
 
