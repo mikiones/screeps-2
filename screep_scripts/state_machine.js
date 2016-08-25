@@ -78,9 +78,24 @@ var energy_state_machine = state_machine({
 	'FULL' : {state_p : 'NOTFULL', cond : function(actor, state) { return actor.carry.energy < actor.carryCapacity; } },
 });
 
-//var harvest_behavior = behavior('harvest', energy_state_machine, 'NOTFULL', {
-//	'NOTFULL' : function(actor, state) {
-//	},
-//	'FULL' : function(actor, state) {
-//	},
-//});
+var harvest_behavior = behavior('harvest', energy_state_machine, 'NOTFULL', {
+	'NOTFULL' : function(actor, state) {
+		console.log('NOTFULL, MINING');
+		var src = actor.pos.findClosestByPath(FIND_SOURCES);
+		if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
+			creep.moveTo(src);
+		}
+	},
+	'FULL' : function(actor, state) {
+		console.log('FULL');
+		if (creep.transfer(Game.spawns['Spawn1']) == ERR_NOT_IN_RANGE) {
+			creep.moveTo(Game.spawns['Spawn1']);
+		}
+	},
+});
+
+module.exports = {
+	energy_state_machine : energy_state_machine,
+	behavior_loop : behavior_loop,
+	behavior : behavior,
+};
