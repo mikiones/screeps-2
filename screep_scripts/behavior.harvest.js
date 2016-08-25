@@ -24,6 +24,12 @@ var harvest_behavior = new sm.behavior('harvest', sm.energy_machine, 'NOTFULL', 
 					if (actor.transfer(spawners[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 						actor.moveTo(spawners[0]);
 					}
+				} else {
+					if (actor.pos.getRangeTo(spawners[0]) <= 1) {
+						actor.drop(actor.carry.energy, RESOURCE_ENERGY);
+					} else {
+						actor.moveTo(spawners[0]);
+					}
 				}
 			}
 		}
