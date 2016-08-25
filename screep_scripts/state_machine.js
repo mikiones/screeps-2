@@ -105,11 +105,7 @@ function behavior_loop(name, behaviors, terminal_states) {
 }
 
 //var empty_machine = new state_machine({});
-//var suicide_behavior = new behavior('suicide', empty_machine, 'EMPTY', {
-//	'EMPTY' : function(actor, state) {
-//		console.log('SUICIDING ACTOR!');
-//		actor.suicide();
-//	},
+//var suicide_behavior = new behavior('suicide', empty_machine, 'EMPTY', {'EMPTY' : (actor, state) => actor.suicide()});
 //});
 //
 //var mine_and_suicide = new behavior_loop('mine->suicide', [harvest_behavior, suicide_behavior], {[harvest_behavior.name] : ['FULL']});
