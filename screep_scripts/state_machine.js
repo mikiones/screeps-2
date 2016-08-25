@@ -104,40 +104,18 @@ function behavior_loop(name, behaviors, terminal_states) {
 	};
 }
 
-var energy_state_machine = new state_machine({
-	'NOTFULL' : [{state_p : 'FULL', cond : function(actor, state) { return actor.carry.energy >= actor.carryCapacity; } }],
-	'FULL' : [{state_p : 'NOTFULL', cond : function(actor, state) { return actor.carry.energy < actor.carryCapacity; } }],
-});
-
-var empty_machine = new state_machine({});
-var suicide_behavior = new behavior('suicide', empty_machine, 'EMPTY', {
-	'EMPTY' : function(actor, state) {
-		console.log('SUICIDING ACTOR!');
-		actor.suicide();
-	},
-});
-
-var harvest_behavior = new behavior('harvest', energy_state_machine, 'NOTFULL', {
-	'NOTFULL' : function(actor, state) {
-		console.log('NOTFULL, MINING');
-		var src = actor.pos.findClosestByPath(FIND_SOURCES);
-		if (actor.harvest(src) == ERR_NOT_IN_RANGE) {
-			actor.moveTo(src);
-		}
-	},
-	'FULL' : function(actor, state) {
-		console.log('FULL, NOTMINING');
-		if (actor.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-			actor.moveTo(Game.spawns['Spawn1']);
-		}
-	},
-});
-
-var mine_and_suicide = new behavior_loop('mine->suicide', [harvest_behavior, suicide_behavior], {[harvest_behavior.name] : ['FULL']});
-
+//var empty_machine = new state_machine({});
+//var suicide_behavior = new behavior('suicide', empty_machine, 'EMPTY', {
+//	'EMPTY' : function(actor, state) {
+//		console.log('SUICIDING ACTOR!');
+//		actor.suicide();
+//	},
+//});
+//
+//var mine_and_suicide = new behavior_loop('mine->suicide', [harvest_behavior, suicide_behavior], {[harvest_behavior.name] : ['FULL']});
+//
 module.exports = {
-	behavior_loop : behavior_loop,
+	state_machine : state_machine,
 	behavior : behavior,
-	mine_and_suicide : mine_and_suicide,
-	harvest : harvest_behavior.run,
+	behavior_loop : behavior_loop,
 };
