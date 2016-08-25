@@ -1,14 +1,12 @@
 var sm = require('state_machine');
 
-var harvest_behavior = new sm.behavior('harvest', sm.energy_machine, 'NOTFULL', {
-	'NOTFULL' : function(actor, state) {
-		console.log('NOTFULL, MINING');
+var harvest_behavior = new sm.energy_tasker('harvest', function(actor, state) {
+		console.log('EMPTY, MINING');
 		var src = actor.pos.findClosestByPath(FIND_SOURCES);
 		if (actor.harvest(src) == ERR_NOT_IN_RANGE) {
 			actor.moveTo(src);
 		}
-	},
-	'FULL' : function(actor, state) {
+	}, function(actor, state) {
 		console.log('FULL, NOTMINING');
 		var containers = actor.room.find(FIND_STRUCTURES,
 			{filter : (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store < structure.storeCapacity});
@@ -33,8 +31,7 @@ var harvest_behavior = new sm.behavior('harvest', sm.energy_machine, 'NOTFULL', 
 				}
 			}
 		}
-	},
-});
+	});
 
 module.exports = {
 	harvest : harvest_behavior,
