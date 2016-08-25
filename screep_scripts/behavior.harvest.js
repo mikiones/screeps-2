@@ -4,7 +4,7 @@ var base = require('behavior.base');
 var harvest_behavior = new sm.energy_tasker('harvest',
 	base.withdraw_from.nearest_source,
 	base.chain_handlers(base.expend_to.transfer_nearest_container,
-		base.expend_to.transfer_nearest_spawn, base.expend_to.transfer_spawn_ground),
+		base.expend_to.transfer_nearest_spawn, base.expend_to.transfer_spawn_ground)
 );
 
 module.exports = {
