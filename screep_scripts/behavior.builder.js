@@ -20,3 +20,7 @@ var builder_behavior = new sm.energy_tasker('builder',
 		}
 	}
 );
+
+module.exports = {
+	build : builder_behavior,
+}
