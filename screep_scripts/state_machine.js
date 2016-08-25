@@ -85,6 +85,16 @@ var energy_state_machine = new state_machine({
 	'FULL' : [{state_p : 'NOTFULL', cond : function(actor, state) { return actor.carry.energy < actor.carryCapacity; } }],
 });
 
+var empty_machine = new state_machine({
+	'EMPTY' : [{}],
+});
+var suicide_behavior = new behavior('suicide', empty_machine, 'SUICIDE', {
+	'EMPTY' : function(actor, state) {
+		console.log('SUICIDING ACTOR!');
+		actor.suicide();
+	},
+});
+
 var harvest_behavior = new behavior('harvest', energy_state_machine, 'NOTFULL', {
 	'NOTFULL' : function(actor, state) {
 		console.log('NOTFULL, MINING');
@@ -101,9 +111,10 @@ var harvest_behavior = new behavior('harvest', energy_state_machine, 'NOTFULL', 
 	},
 });
 
+var mine_and_suicide = new behavior_loop('mine->suicide', [harvest_behavior, suicide_behavior], {harvest_behavior.name : ['FULL']});
+
 module.exports = {
-	energy_state_machine : energy_state_machine,
 	behavior_loop : behavior_loop,
 	behavior : behavior,
-	harvest_behavior : harvest_behavior,
+	mine_and_suicide : mine_and_suicide,
 };
