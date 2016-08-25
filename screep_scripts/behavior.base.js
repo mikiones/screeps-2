@@ -4,9 +4,15 @@ function move_action_on_target(actor, action, target) {
 	}
 };
 
+var get_target = {
+	nearest : function(actor, action, type, cond) {
+		return actor.pos.findClosestByPath(type, { filter : cond });
+	},
+};
+
 var withdraw_from = {
 	nearest : function(actor, action, type, cond) {
-		var target = actor.pos.findClosestByPath(type, { filter : cond });
+		var target = get_target.nearest(actor, action, type, cond);
 		if (target) {
 			move_action_on_target(actor, action, target);
 			return true;
