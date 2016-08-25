@@ -81,17 +81,23 @@ function behavior(name, machine, initial_state, handle_states) {
 //type behaviors = [behavior]
 //type terminal_states = {behavior_name : [state]}
 function behavior_loop(name, behaviors, terminal_states) {
-	this.current_behavior = 0;
+	this.name = name;
 	this.behaviors = behaviors;
 	this.terminal_states = terminal_states;
 	this.run = function(actor) {
-		var current_behavior = this.behaviors[this.current_behavior % _.size(this.behaviors)];
+		var store_str = this.name.concat('_index');
+		if (!actor.memory[store_str]) {
+			actor.memory[store_str] = 0;
+		}
+		var current_index = actor.memory[store_str];
+		var current_behavior = this.behaviors[current_index % _.size(this.behaviors)];
 		var state = current_behavior.get_state(actor);
 		state = current_behavior.step(actor, state);
 		if (this.terminal_states[current_behavior.name] && _.includes(this.terminal_states[current_behavior.name], state)) {
-			this.current_behavior += 1;
-			current_behavior = this.behaviors[this.current_behavior % _.size(this.behaviors)];
+			current_index += 1;
+			current_behavior = this.behaviors[current_index % _.size(this.behaviors)];
 			current_behavior.run(actor, state);
+			actor.memory[store_str] = current_index;
 		} else {
 			current_behavior.swap(actor, state);
 		}
