@@ -44,7 +44,7 @@ function behavior(name, machine, initial_state, handle_states) {
 	this.machine = machine;
 	this.initial_state = initial_state;
 	this.handle_states = handle_states;
-	this.step = function(actor) {
+	this.get_state = function(actor) {
 		var store_str = this.name.concat('_state');
 		if (actor.memory.behavior != this.name) {
 			if (actor.memory.behavior) {
@@ -57,6 +57,9 @@ function behavior(name, machine, initial_state, handle_states) {
 			actor.memory[store_str] = this.initial_state;
 		}
 		var state = actor.memory[store_str];
+		return state;
+	};
+	this.step = function(actor, state) {
 		return this.machine.resolve_machine(actor, state);
 	};
 	this.swap = function(actor, state_p) {
@@ -69,7 +72,8 @@ function behavior(name, machine, initial_state, handle_states) {
 		}
 	};
 	this.run = function(actor) {
-		var state_p = this.step(actor);
+		var state = this.get_state(actor);
+		var state_p = this.step(actor, state);
 		this.swap(actor, state_p);
 	};
 }
@@ -82,12 +86,12 @@ function behavior_loop(name, behaviors, terminal_states) {
 	this.terminal_states = terminal_states;
 	this.run = function(actor) {
 		var current_behavior = this.behaviors[this.current_behavior % _.size(this.behaviors)];
-		current_behavior.run(actor);
 		var state = actor.memory[current_behavior.name.concat('_state')];
 		if (this.terminal_states[current_behavior.name] && _.includes(this.terminal_states[current_behavior.name], state)) {
 			this.current_behavior += 1;
 		}
-		var current_behavior = this.behaviors[this.current_behavior % _.size(this.behaviors)];
+		current_behavior = this.behaviors[this.current_behavior % _.size(this.behaviors)];
+		current_behavior.run(actor);
 	};
 }
 
