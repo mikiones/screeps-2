@@ -15,8 +15,13 @@ var harvest_behavior = new sm.behavior('harvest', energy_machine, 'NOTFULL', {
 	},
 	'FULL' : function(actor, state) {
 		console.log('FULL, NOTMINING');
-		var containers = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_CONTAINER);
+		var containers = actor.room.find(FIND_STRUCTURE,
+			{filter : (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store < structure.storeCapacity)};
 		if (_.size(containers) != 0) {
+			var target = _.minBy(containers, _.flow([actor.pos.findPath, _.size]));
+			if (actor.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+				actor.moveTo(target);
+			}
 		} else {
 			var spawners = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_SPAWN);
 			if (_.size(spawners) == 1) {
