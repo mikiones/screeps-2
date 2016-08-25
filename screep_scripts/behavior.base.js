@@ -1,5 +1,5 @@
 function move_action_on_target(actor, action, target) {
-	if (actor[action](target) == ERR_NOT_IN_RANGE) {
+	if (target && actor[action](target) == ERR_NOT_IN_RANGE) {
 		actor.moveTo(target);
 	}
 };
@@ -10,18 +10,17 @@ var get_target = {
 	},
 };
 
+function move_action_nearest(actor, action, type, cond) {
+	return move_action_on_target(actor, action, get_target.nearest(actor, action, type, cond));
+}
+
 var withdraw_from = {
-	nearest : function(actor, action, type, cond) {
-		var target = get_target.nearest(actor, action, type, cond);
-		if (target) {
-			move_action_on_target(actor, action, target);
-			return true;
-		}
-		return false;
-	},
-	nearest_container : (actor) => withdraw_from.nearest(actor, 'withdraw', FIND_STRUCTURES, (struct) => struct.store.energy > 0),
-	nearest_source : (actor) => withdraw_from.nearest(actor, 'harvest', FIND_SOURCES, (struct) => true),
-	nearest_dropped_energy : (actor) => withdraw_from.nearest(actor, 'pickup', FIND_DROPPED_ENERGY, (struct) => true),
+	nearest_container : (actor) => move_action_nearest(actor, 'withdraw', FIND_STRUCTURES, (struct) => struct.store.energy > 0),
+	nearest_source : (actor) => move_action_nearest(actor, 'harvest', FIND_SOURCES, (struct) => true),
+	nearest_dropped_energy : (actor) => move_action_nearest(actor, 'pickup', FIND_DROPPED_ENERGY, (struct) => true),
+};
+
+var expend_energy = {
 };
 
 function chain_state_handlers(...handlers) {
