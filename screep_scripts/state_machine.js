@@ -86,12 +86,11 @@ function behavior_loop(name, behaviors, terminal_states) {
 	this.terminal_states = terminal_states;
 	this.run = function(actor) {
 		var current_behavior = this.behaviors[this.current_behavior % _.size(this.behaviors)];
+		current_behavior.run(actor);
 		var state = actor.memory[current_behavior.name.concat('_state')];
 		if (this.terminal_states[current_behavior.name] && _.includes(this.terminal_states[current_behavior.name], state)) {
 			this.current_behavior += 1;
 		}
-		current_behavior = this.behaviors[this.current_behavior % _.size(this.behaviors)];
-		current_behavior.run(actor);
 	};
 }
 
