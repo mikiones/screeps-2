@@ -28,8 +28,8 @@ var spawner_behavior = new sm.behavior('spawner', creep_machine, 'BUILD_HARVESTE
 				Game.memory.creeps[id] = {};
 			}
 		}
-		actor.memory.harvesters = _.size(actor.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':') == 'HARVESTER'}));
-		actor.memory.builders = _.size(actor.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':') == 'BUILDER'}));
+		actor.memory.harvesters = _.size(actor.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':')[0] == 'HARVESTER'}));
+		actor.memory.builders = _.size(actor.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':')[0] == 'BUILDER'}));
 	},
 	'RENEW_ALL' : function(actor, state) {
 		_.forEach(actor.room.find(FIND_MY_CREEPS), actor.renew);
