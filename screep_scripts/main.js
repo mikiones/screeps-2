@@ -3,7 +3,7 @@ var roleSpawner = require('role.spawner');
 var sm = require('state_machine');
 
 module.exports.loop = function () {
-	Game.spawns['Spawner1'].createCreep([WORK, CARRY, MOVE], _.uniqueId());
+	Game.spawns['Spawn1'].createCreep([WORK, CARRY, MOVE], _.uniqueId());
 	_.forEach(Game.creeps, function(creep) {
 		sm.mine_and_suicide(creep);
 	});
