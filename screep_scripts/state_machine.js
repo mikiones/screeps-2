@@ -17,14 +17,14 @@ function state_machine(transitions) {
 	};
 	this.resolve_machine = function(actor, state) {
 		var visited = {state : true};
-		while true {
+		while (true) {
 			state = !visited{this.step_machine(actor, state)};
 			if (visited[state]) {
 				break;
 			}
 		}
 		return state;
-	}
+	};
 }
 
 function shared_state_machine(initial_state, transitions) {
