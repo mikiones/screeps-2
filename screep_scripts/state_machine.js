@@ -96,9 +96,7 @@ var energy_state_machine = new state_machine({
 	'FULL' : [{state_p : 'NOTFULL', cond : function(actor, state) { return actor.carry.energy < actor.carryCapacity; } }],
 });
 
-var empty_machine = new state_machine({
-	'EMPTY' : [{}],
-});
+var empty_machine = new state_machine({});
 var suicide_behavior = new behavior('suicide', empty_machine, 'EMPTY', {
 	'EMPTY' : function(actor, state) {
 		console.log('SUICIDING ACTOR!');
