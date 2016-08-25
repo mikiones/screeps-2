@@ -31,7 +31,8 @@ var harvest_behavior = new sm.energy_tasker('harvest', function(actor, state) {
 				}
 			}
 		}
-	});
+	}
+);
 
 module.exports = {
 	harvest : harvest_behavior,
