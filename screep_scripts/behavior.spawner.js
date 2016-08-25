@@ -3,8 +3,11 @@ var util = require('util');
 
 var creep_machine = new sm.state_machine({
 	'BUILD_HARVESTER' : [{state_p : 'BUILD_BUILDER', cond : (actor, state) => actor.memory.harvesters && actor.memory.harvesters >= 8}],
-	'BUILD_BUILDER' : [{state_p : 'RENEW_ALL', cond : (actor, state) => actor.memory.builders && actor.memory.builders >= 4}],
-	'RENEW_ALL' : [{state_p : 'BUILD_HARVESTER', cond : (actor, state) => actor.room.find(FIND_MY_CREEPS). length <= 7}],
+	'BUILD_BUILDER' : [
+		{state_p : 'RENEW_ALL', cond : (actor, state) => actor.memory.builders && actor.memory.builders >= 4},
+		{state_p : 'BUILD_HARVESTER', cond : (actor, state) => actor.memory.harvesters < 8},
+	],
+	'RENEW_ALL' : [{state_p : 'BUILD_HARVESTER', cond : (actor, state) => actor.room.find(FIND_MY_CREEPS).length < 8}],
 });
 
 var spawner_behavior = new sm.behavior('spawner', creep_machine, 'BUILD_HARVESTER', {
@@ -16,6 +19,7 @@ var spawner_behavior = new sm.behavior('spawner', creep_machine, 'BUILD_HARVESTE
 			}
 		}
 		actor.memory.harvesters = _.size(actor.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':') == 'HARVESTER'}));
+		actor.memory.builders = _.size(actor.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':') == 'BUILDER'}));
 	},
 	'BUILD_BUILDER' : function(actor, state) {
 		if (actor.energy >= 200) {
@@ -24,6 +28,7 @@ var spawner_behavior = new sm.behavior('spawner', creep_machine, 'BUILD_HARVESTE
 				Game.memory.creeps[id] = {};
 			}
 		}
+		actor.memory.harvesters = _.size(actor.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':') == 'HARVESTER'}));
 		actor.memory.builders = _.size(actor.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':') == 'BUILDER'}));
 	},
 	'RENEW_ALL' : function(actor, state) {
