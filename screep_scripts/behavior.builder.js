@@ -9,6 +9,7 @@ var builder_behavior = new sm.energy_tasker('builder',
 			var target = containers[0];
 			if (actor.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 				actor.moveTo(target);
+			}
 		} else {
 			//Scavenge
 			var target = actor.pos.findClosestByPath(FIND_DROPPED_ENERGY);
