@@ -1,5 +1,5 @@
 function move_action_on_target(actor, action, target) {
-	if (action(target) == ERR_NOT_IN_RANGE) {
+	if (actor[action](target) == ERR_NOT_IN_RANGE) {
 		actor.moveTo(target);
 	}
 };
@@ -13,12 +13,12 @@ var withdraw_from = {
 		}
 		return false;
 	},
-	nearest_container : (actor) => withdraw_from.nearest(actor, actor.withdraw, FIND_STRUCTURES, (struct) => struct.store.energy > 0),
-	nearest_source : (actor) => withdraw_from.nearest(actor, actor.harvest, FIND_SOURCES, (struct) => true),
-	nearest_dropped_energy : (actor) => withdraw_from.nearest(actor, actor.pickup, FIND_DROPPED_ENERGY, (struct) => true),
+	nearest_container : (actor) => withdraw_from.nearest(actor, 'withdraw', FIND_STRUCTURES, (struct) => struct.store.energy > 0),
+	nearest_source : (actor) => withdraw_from.nearest(actor, 'harvest', FIND_SOURCES, (struct) => true),
+	nearest_dropped_energy : (actor) => withdraw_from.nearest(actor, 'pickup', FIND_DROPPED_ENERGY, (struct) => true),
 };
 
-function chain_state_handlers(handlers) {
+function chain_state_handlers(...handlers) {
 	return (actor, state) => _.find(handlers, (handle) => handle(actor));
 }
 
