@@ -49,21 +49,21 @@ function move_transfer_nearest(actor, resource_type, type, cond) {
 
 var withdraw_from = {
 	nearest_container : (actor) => move_action_nearest(actor, 'withdraw', FIND_STRUCTURES,
-		(struct) => struct.structType == STRUCTURE_CONTAINER && struct.store.energy > 0),
+		(struct) => struct.structureType == STRUCTURE_CONTAINER && struct.store.energy > 0),
 	nearest_source : (actor) => move_action_nearest(actor, 'harvest', FIND_SOURCES, (struct) => true),
 	nearest_dropped_energy : (actor) => move_action_nearest(actor, 'pickup', FIND_DROPPED_ENERGY, (struct) => true),
 	nearest_spawn : (actor) => move_action_nearest(actor, 'withdraw', FIND_STRUCTURES,
-		(struct) => struct.structType == STRUCTURE_SPAWN && struct.store.energy > 0),
+		(struct) => struct.structureType == STRUCTURE_SPAWN && struct.store.energy > 0),
 };
 
 var expend_energy_to = {
 	transfer : (actor, target) => move_transfer_on_target(actor, RESOURCE_ENERGY, target),
 	transfer_nearest_container : (actor) => move_transfer_nearest(actor, RESOURCE_ENERGY, FIND_STRUCTURES,
-		(struct) => struct.structType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity),
+		(struct) => struct.structureType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity),
 	transfer_nearest_spawn : (actor) => move_transfer_nearest(actor, RESOURCE_ENERGY, FIND_STRUCTURES,
-		(struct) => struct.structType == STRUCTURE_SPAWN && struct.store.energy < struct.storeCapacity),
+		(struct) => struct.structureType == STRUCTURE_SPAWN && struct.store.energy < struct.storeCapacity),
 	transfer_spawn_ground : (actor) => drop_resource_when_adjacent(actor, RESOURCE_ENERGY,
-		get_target.nearest(actor, FIND_STRUCTURES, (struct) => struct.structType == STRUCTURE_SPAWN)),
+		get_target.nearest(actor, FIND_STRUCTURES, (struct) => struct.structureType == STRUCTURE_SPAWN)),
 };
 
 function chain_state_handlers(...handlers) {
