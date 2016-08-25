@@ -10,7 +10,7 @@ var spawner_behavior = new sm.behavior('spawner', creep_machine, 'BUILD_HARVESTE
 	'BUILD_HARVESTER' : function(actor, state) {
 		if (actor.energy >= 200) {
 			var id = 'HARVESTER'.concat(util.make_id());
-			if (actor.createCreep([WORK, CARRY, MOVE], id))) == OK) {
+			if (actor.createCreep([WORK, CARRY, MOVE], id) == OK) {
 				Game.memory.creeps[id] = {};
 			}
 		}
