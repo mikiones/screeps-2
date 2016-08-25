@@ -128,4 +128,5 @@ module.exports = {
 	behavior_loop : behavior_loop,
 	behavior : behavior,
 	mine_and_suicide : mine_and_suicide,
+	harvest : harvest_behavior.run,
 };
