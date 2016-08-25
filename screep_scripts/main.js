@@ -10,7 +10,7 @@ var behaviors = {
 };
 
 function run(creep) {
-	var type = creep.name.split(':');
+	var type = creep.name.split(':')[0];
 	behaviors[type].run(creep);
 }
 
