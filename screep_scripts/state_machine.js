@@ -59,7 +59,11 @@ function behavior(name, machine, initial_state, handle_states) {
 		var state = actor.memory[store_str];
 		var state_p = this.machine.resolve_machine(actor, state);
 		actor.memory[store_str] = state_p;
-		handle_states[state_p](actor, state_p);
+		if (handle_states[state_p]) {
+			handle_states[state_p](actor, state_p);
+		} else {
+			console.log("NO FUNCTION TO HANDLE STATE : ", state_p);
+		}
 	};
 }
 
@@ -88,7 +92,7 @@ var energy_state_machine = new state_machine({
 var empty_machine = new state_machine({
 	'EMPTY' : [{}],
 });
-var suicide_behavior = new behavior('suicide', empty_machine, 'SUICIDE', {
+var suicide_behavior = new behavior('suicide', empty_machine, 'EMPTY', {
 	'EMPTY' : function(actor, state) {
 		console.log('SUICIDING ACTOR!');
 		actor.suicide();
