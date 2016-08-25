@@ -104,6 +104,11 @@ function behavior_loop(name, behaviors, terminal_states) {
 	};
 }
 
+var energy_machine = new state_machine({
+	'NOTFULL' : [{state_p : 'FULL', cond : (actor, state) => actor.carry.energy >= actor.carryCapacity}],
+	'FULL' : [{state_p : 'NOTFULL', cond : (actor, state) => actor.carry.energy < actor.carryCapacity}],
+});
+
 //var empty_machine = new state_machine({});
 //var suicide_behavior = new behavior('suicide', empty_machine, 'EMPTY', {'EMPTY' : (actor, state) => actor.suicide()});
 //});
@@ -114,4 +119,5 @@ module.exports = {
 	state_machine : state_machine,
 	behavior : behavior,
 	behavior_loop : behavior_loop,
+	energy_machine : energy_machine,
 };

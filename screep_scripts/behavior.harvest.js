@@ -1,11 +1,6 @@
 var sm = require('state_machine');
 
-var energy_machine = new sm.state_machine({
-	'NOTFULL' : [{state_p : 'FULL', cond : (actor, state) => actor.carry.energy >= actor.carryCapacity}],
-	'FULL' : [{state_p : 'NOTFULL', cond : (actor, state) => actor.carry.energy < actor.carryCapacity}],
-});
-
-var harvest_behavior = new sm.behavior('harvest', energy_machine, 'NOTFULL', {
+var harvest_behavior = new sm.behavior('harvest', sm.energy_machine, 'NOTFULL', {
 	'NOTFULL' : function(actor, state) {
 		console.log('NOTFULL, MINING');
 		var src = actor.pos.findClosestByPath(FIND_SOURCES);
