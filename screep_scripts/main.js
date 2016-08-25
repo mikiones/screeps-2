@@ -15,8 +15,8 @@ function run(creep) {
 }
 
 module.exports.loop = function () {
-	_.forEach(Game.creeps, (creep) => behavior_harvest.harvest.run(creep));
-	_.forEach(Game.spawns, run);
+	_.forEach(Game.creeps, run);
+	_.forEach(Game.spawns, (spawn) => behavior_spawner.spawner.run(spawn));
 	//var spawner = Game.spawns['Spawn1'];
 	//roleSpawner.init(spawner);
 	//roleSpawner.spawn_creep(spawner);
