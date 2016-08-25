@@ -5,7 +5,7 @@ var behavior_harvest = require('behavior.harvest');
 module.exports.loop = function () {
 	Game.spawns['Spawn1'].createCreep([WORK, CARRY, MOVE], _.uniqueId());
 	_.forEach(Game.creeps, function(creep) {
-		behavior_harvest.harvest(creep);
+		behavior_harvest.harvest.run(creep);
 	});
 	//var spawner = Game.spawns['Spawn1'];
 	//roleSpawner.init(spawner);

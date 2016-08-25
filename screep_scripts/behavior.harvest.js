@@ -22,5 +22,5 @@ var harvest_behavior = new sm.behavior('harvest', energy_machine, 'NOTFULL', {
 });
 
 module.exports = {
-	harvest : harvest_behavior.run,
+	harvest : harvest_behavior,
 }
