@@ -1,17 +1,29 @@
 function move_action_on_target(actor, action, target) {
 	if (target && actor[action](target) == ERR_NOT_IN_RANGE) {
 		actor.moveTo(target);
+		return true;
 	}
+	return false;
 };
+function move_transfer_on_target(actor, resource_type, target) {
+	if (target && actor.transfer(target, resource_type) == ERR_NOT_IN_RANGE) {
+		actor.moveTo(target);
+		return true;
+	}
+	return false;
+}
 
 var get_target = {
-	nearest : function(actor, action, type, cond) {
+	nearest : function(actor, type, cond) {
 		return actor.pos.findClosestByPath(type, { filter : cond });
 	},
 };
 
 function move_action_nearest(actor, action, type, cond) {
-	return move_action_on_target(actor, action, get_target.nearest(actor, action, type, cond));
+	return move_action_on_target(actor, action, get_target.nearest(actor, type, cond));
+}
+function move_transfer_nearest(actor, resource_type, type, cond) {
+	return move_transfer_on_target(actor, resource_type, get_target.nearest(actor, type, cond));
 }
 
 var withdraw_from = {
@@ -19,9 +31,16 @@ var withdraw_from = {
 		(struct) => struct.structType == STRUCTURE_CONTAINER && struct.store.energy > 0),
 	nearest_source : (actor) => move_action_nearest(actor, 'harvest', FIND_SOURCES, (struct) => true),
 	nearest_dropped_energy : (actor) => move_action_nearest(actor, 'pickup', FIND_DROPPED_ENERGY, (struct) => true),
+	nearest_spawn : (actor) => move_action_nearest(actor, 'withdraw', FIND_STRUCTURES,
+		(struct) => struct.structType == STRUCTURE_SPAWN && struct.store.energy > 0),
 };
 
-var expend_energy = {
+var expend_energy_to = {
+	transfer : (actor, target) => move_transfer_on_target(actor, RESOURCE_ENERGY, target),
+	transfer_nearest_container : (actor) => move_transfer_nearest(actor, RESOURCE_ENERGY, FIND_STRUCTURES,
+		(struct) => struct.structType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity),
+	transfer_nearest_spawn : (actor) => move_transfer_nearest(actor, RESOURCE_ENERGY, FIND_STRUCTURES,
+		(struct) => struct.structType == STRUCTURE_SPAWN && struct.store.energy < struct.storeCapacity),
 };
 
 function chain_state_handlers(...handlers) {
