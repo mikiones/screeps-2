@@ -110,7 +110,7 @@ var energy_machine = new state_machine({
 });
 
 var energy_tasker = function(name, empty_func, full_func) {
-	return new behavior(name, energy_machine, 'EMPTY') {
+	return new behavior(name, energy_machine, 'EMPTY', {
 		'EMPTY' : empty_func,
 		'FULL' : full_func,
 	});
