@@ -26,7 +26,7 @@ var harvest_behavior = new sm.behavior('harvest', sm.energy_machine, 'NOTFULL', 
 					}
 				} else {
 					if (actor.pos.getRangeTo(spawners[0]) <= 1) {
-						actor.drop(actor.carry.energy, RESOURCE_ENERGY);
+						actor.drop(RESOURCE_ENERGY);
 					} else {
 						actor.moveTo(spawners[0]);
 					}
