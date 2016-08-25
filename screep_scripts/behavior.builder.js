@@ -6,9 +6,8 @@ var builder_behavior = new sm.energy_tasker('builder',
 		if (_.size(containers) > 0) {
 		} else {
 			//Scavenge
-			var droppedEnergy = actor.room.find(FIND_DROPPED_ENERGY);
-			var target = _.minBy(droppedEnergy, _.flow([actor.pos.findPath, _.size]));
-			if (actor.pickup(target) == ERR_NOT_IN_RANGE) {
+			var target = actor.pos.findClosestByPath(FIND_DROPPED_ENERGY);
+			if (target && actor.pickup(target) == ERR_NOT_IN_RANGE) {
 				actor.moveTo(target);
 			}
 		}

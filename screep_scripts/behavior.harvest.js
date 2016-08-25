@@ -8,8 +8,7 @@ var harvest_behavior = new sm.energy_tasker('harvest', function(actor, state) {
 		}
 	}, function(actor, state) {
 		console.log('FULL, NOTMINING');
-		var containers = actor.room.find(FIND_STRUCTURES,
-			{filter : (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store < structure.storeCapacity});
+		var containers = actor.room.find(FIND_STRUCTURES, {filter : (structure) => structure.structureType == STRUCTURE_CONTAINER});
 		if (_.size(containers) != 0) {
 			var target = _.minBy(containers, _.flow([actor.pos.findPath, _.size]));
 			if (actor.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
