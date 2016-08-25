@@ -4,13 +4,34 @@ function move_action_on_target(actor, action, target) {
 		return true;
 	}
 	return false;
-};
+}
+
 function move_transfer_on_target(actor, resource_type, target) {
 	if (target && actor.transfer(target, resource_type) == ERR_NOT_IN_RANGE) {
 		actor.moveTo(target);
 		return true;
 	}
 	return false;
+}
+
+function action_when_adjacent(actor, action, target) {
+	if (target) {
+		if (actor.pos.getRangeTo(target) <= 1) {
+			actor[action](target);
+		} else {
+			actor.moveTo(target);
+		}
+	}
+}
+
+function drop_resource_when_adjacent(actor, resource_type, target) {
+	if (target) {
+		if (actor.pos.getRangeTo(target) <= 1) {
+			actor.drop(resource_type);
+		} else {
+			actor.moveTo(target);
+		}
+	}
 }
 
 var get_target = {
@@ -41,6 +62,8 @@ var expend_energy_to = {
 		(struct) => struct.structType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity),
 	transfer_nearest_spawn : (actor) => move_transfer_nearest(actor, RESOURCE_ENERGY, FIND_STRUCTURES,
 		(struct) => struct.structType == STRUCTURE_SPAWN && struct.store.energy < struct.storeCapacity),
+	transfer_spawn_ground : (actor) => drop_resource_when_adjacent(actor, RESOURCE_ENERGY,
+		get_target.nearest(actor, FIND_STRUCTURES, (struct) => struct.structType == STRUCTURE_SPAWN)),
 };
 
 function chain_state_handlers(...handlers) {
@@ -50,4 +73,5 @@ function chain_state_handlers(...handlers) {
 module.exports = {
 	chain_handlers : chain_state_handlers,
 	withdraw_from : withdraw_from,
+	expend_to : expend_energy_to,
 };
