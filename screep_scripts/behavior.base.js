@@ -64,6 +64,7 @@ var expend_energy_to = {
 		(struct) => struct.structureType == STRUCTURE_SPAWN && struct.energy < struct.energyCapacity),
 	transfer_spawn_ground : (actor) => drop_resource_when_adjacent(actor, RESOURCE_ENERGY,
 		get_target.nearest(actor, FIND_STRUCTURES, (struct) => struct.structureType == STRUCTURE_SPAWN)),
+	build_nearest_site : (actor) => move_action_nearest(actor, 'build', FIND_CONSTRUCTION_SITES, (c) => true),
 };
 
 function chain_state_handlers(...handlers) {
