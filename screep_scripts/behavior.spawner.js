@@ -22,7 +22,7 @@ var spawner_behavior = new sm.behavior('spawner', creep_machine, 'BUILD_HARVESTE
 		actor.memory.builders = _.size(actor.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':')[0] == 'BUILDER'}));
 	},
 	'BUILD_BUILDER' : function(actor, state) {
-		if (actor.energy >= 200) {
+		if (actor.energy >= 300) {
 			var id = 'BUILDER:'.concat(util.make_id());
 			if (actor.createCreep([WORK, CARRY, MOVE, MOVE, MOVE], id) == OK) {
 				Game.memory.creeps[id] = {};
