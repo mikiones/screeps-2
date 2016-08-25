@@ -14,7 +14,7 @@ var builder_behavior = new sm.energy_tasker('builder',
 		}
 	},
 	function(actor, state) {
-		var target_build = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+		var target_build = actor.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
 		if (target_build && actor.build(target_build) == ERR_NOT_IN_RANGE) {
 			actor.moveTo(target_build);
 		}
