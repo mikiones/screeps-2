@@ -7,21 +7,22 @@
 function state_machine(transitions) {
 	this.transitions = transitions;
 	this.step_machine = function(actor, state) {
-		state_p = _.first(this.transitions[state], function(transition) {
+		var state_p = _.first(this.transitions[state], function(transition) {
 			return transition.cond(actor, state);
-		}).state_p;
+		});
 		if (state_p) {
-			return state_p;
+			return state_p.state_p;
 		}
 		return s.state;
 	};
 	this.resolve_machine = function(actor, state) {
 		var visited = {state : true};
 		while (true) {
-			state = !visited[this.step_machine(actor, state)];
+			state = this.step_machine(actor, state);
 			if (visited[state]) {
 				break;
 			}
+			visited[state] = true;
 		}
 		return state;
 	};
@@ -73,12 +74,12 @@ function behavior_loop(name, behaviors, terminal_states) {
 	};
 }
 
-var energy_state_machine = state_machine({
+var energy_state_machine = new state_machine({
 	'NOTFULL' : {state_p : 'FULL', cond : function(actor, state) { return actor.carry.energy >= actor.carryCapacity; } },
 	'FULL' : {state_p : 'NOTFULL', cond : function(actor, state) { return actor.carry.energy < actor.carryCapacity; } },
 });
 
-var harvest_behavior = behavior('harvest', energy_state_machine, 'NOTFULL', {
+var harvest_behavior = new behavior('harvest', energy_state_machine, 'NOTFULL', {
 	'NOTFULL' : function(actor, state) {
 		console.log('NOTFULL, MINING');
 		var src = actor.pos.findClosestByPath(FIND_SOURCES);
