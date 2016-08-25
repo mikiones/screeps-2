@@ -115,7 +115,7 @@ var harvest_behavior = new behavior('harvest', energy_state_machine, 'NOTFULL', 
 	},
 });
 
-var mine_and_suicide = new behavior_loop('mine->suicide', [harvest_behavior, suicide_behavior], {harvest_behavior.name : ['FULL']});
+var mine_and_suicide = new behavior_loop('mine->suicide', [harvest_behavior, suicide_behavior], {[harvest_behavior.name] : ['FULL']});
 
 module.exports = {
 	behavior_loop : behavior_loop,
