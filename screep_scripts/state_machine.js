@@ -44,7 +44,7 @@ function behavior(name, machine, initial_state, handle_states) {
 	this.machine = machine;
 	this.initial_state = initial_state;
 	this.handle_states = handle_states;
-	this.run = function(actor) {
+	this.step = function(actor) {
 		var store_str = this.name.concat('_state');
 		if (actor.memory.behavior != this.name) {
 			if (actor.memory.behavior) {
@@ -57,13 +57,20 @@ function behavior(name, machine, initial_state, handle_states) {
 			actor.memory[store_str] = this.initial_state;
 		}
 		var state = actor.memory[store_str];
-		var state_p = this.machine.resolve_machine(actor, state);
+		return this.machine.resolve_machine(actor, state);
+	};
+	this.swap = function(actor, state_p) {
+		var store_str = this.name.concat('_state');
 		actor.memory[store_str] = state_p;
 		if (handle_states[state_p]) {
 			handle_states[state_p](actor, state_p);
 		} else {
 			console.log("NO FUNCTION TO HANDLE STATE : ", state_p);
 		}
+	};
+	this.run = function(actor) {
+		var state_p = this.step(actor);
+		this.swap(actor, state_p);
 	};
 }
 
