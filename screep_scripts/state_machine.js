@@ -87,11 +87,14 @@ function behavior_loop(name, behaviors, terminal_states) {
 	this.run = function(actor) {
 		var current_behavior = this.behaviors[this.current_behavior % _.size(this.behaviors)];
 		var state = current_behavior.get_state(actor);
+		state = current_behavior.step(actor, state);
 		if (this.terminal_states[current_behavior.name] && _.includes(this.terminal_states[current_behavior.name], state)) {
 			this.current_behavior += 1;
+			current_behavior = this.behaviors[this.current_behavior % _.size(this.behaviors)];
+			current_behavior.run(actor, state);
+		} else {
+			current_behavior.swap(actor, state);
 		}
-		current_behavior = this.behaviors[this.current_behavior % _.size(this.behaviors)];
-		current_behavior.run(actor);
 	};
 }
 
@@ -117,7 +120,7 @@ var harvest_behavior = new behavior('harvest', energy_state_machine, 'NOTFULL', 
 		}
 	},
 	'FULL' : function(actor, state) {
-		console.log('FULL');
+		console.log('FULL, NOTMINING');
 		if (actor.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 			actor.moveTo(Game.spawns['Spawn1']);
 		}
