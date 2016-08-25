@@ -13,7 +13,7 @@ function state_machine(transitions) {
 		if (state_p) {
 			return state_p.state_p;
 		}
-		return s.state;
+		return state;
 	};
 	this.resolve_machine = function(actor, state) {
 		var visited = {state : true};
