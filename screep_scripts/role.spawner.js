@@ -72,23 +72,29 @@ var roleSpawner = {
 		}
 	},
 	energy_deficit : function(spawner) {
-		var deficit = spawner.energyCapacity - spawner.energy;
-		deficit += _.reduce(Game.structures, function(result, value, key){
+		return _.reduce(Game.structures, function(result, value, key){
 			if(value.structureType == STRUCTURE_EXTENSION) {
 				result += value.energyCapacity - value.energy;
 			}
 			return result;
-		}, 0);
-		return deficit;
+		}, spawner.energyCapacity - spawner.energy);
 	},
 	energy_available : function(spawner) {
-		return spawner.energy + _.reduce(Game.structures, function(result, struct, key) {
+		return _.reduce(Game.structures, function(result, struct, key) {
 			if (struct.structureType == STRUCTURE_EXTENSION) {
 				result += value.energy;
 			}
 			return result;
-		}, 0);
-	}
+		}, spawner.energy);
+	},
+	energy_capacity : function(spawner) {
+		return _.reduce(Game.structures, function(result, struct, key) {
+			if (struct.structureType == STRUCTURE_EXTENSION) {
+				result += value.energyCapacity;
+			}
+			return result;
+		}, spawner.energyCapacity);
+	},
 	assign_work_2 : function(spawner, creep) {
 		if (spawner.memory.task_mode == SPAWN_MODE) {
 			var next_cmd = [];
@@ -96,11 +102,11 @@ var roleSpawner = {
 				next_cmd.push(tasks.tasks.FILL.make_cmd(spawner.id, {store_type : 'energy'}));
 			}
 			var extensions = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_EXTENSION);
-			for(var ext in extensions) {
+			_.forEach(extensions, function(ext, key) {
 				if (ext.energy < ext.energyCapacity) {
 					next_cmd.push(tasks.tasks.FILL.make_cmd(ext.id, {store_type : 'energy'}));
 				}
-			}
+			});
 			if (next_cmd.length == 0) {
 				creep.memory.cmd = tasks.tasks.FILL.make_cmd(spawner.id, {store_type : 'energy'});
 			} else {
