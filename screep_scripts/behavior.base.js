@@ -52,6 +52,10 @@ var get_target = {
 	nearest : function(actor, type, cond) {
 		return actor.pos.findClosestByPath(type, { filter : cond });
 	},
+	lowest_hits : function(actor, type, cond) {
+		var targets = actor.room.find(type, { filter : cond });
+		return _.minBy(targets, (target) => target.hits);
+	},
 };
 
 function move_action_nearest(actor, action, type, cond) {
@@ -82,6 +86,12 @@ var expend_energy_to = {
 	upgrade_nearest_rc : (actor) => move_action_on_target(actor, 'upgradeController', actor.room.controller),
 	transfer_nearest_extension : (actor) => move_resource_action_nearest(actor, 'transfer', RESOURCE_ENERGY, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_EXTENSION && struct.energy < struct.energyCapacity),
+	repair_lowest_hit_container : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
+		(struct) => struct.structureType == STRUCTURE_CONTAINER)),
+	repair_lowest_hit_wall : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
+		(struct) => struct.structureType == STRUCTURE_WALL)),
+	repair_lowest_hit_wall : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
+		(struct) => struct.structureType == STRUCTURE_ROAD)),
 };
 
 function chain_state_handlers(...handlers) {
