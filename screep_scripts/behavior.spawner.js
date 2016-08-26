@@ -23,7 +23,7 @@ function spawner_init(spawner) {
 	}
 }
 
-function add_contstruction_path(src, dst) {
+function add_construction_path(src, dst) {
 	_.forEach(src.pos.findPathTo(dst.pos, {igoreCreeps : true, ignoreRoads : true}),
 		(p) => src.room.createConstructionSite(loc.x, loc.y, STRUCTURE_ROAD));
 }
