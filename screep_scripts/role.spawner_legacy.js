@@ -11,21 +11,6 @@ var UPGRADE_MODE = 'UPGRADE_MODE';
 var NORMAL_MODE = 'NORMAL_MODE';
 
 var roleSpawner = {
-	init : function(spawner) {
-		if (spawner.memory.sources_init && spawner.memory.rc_init) {
-			return;
-		} else if (!spawner.memory.sources_init) {
-			roleSpawner.analyze_sources(spawner);
-			spawner.memory.sources_init = true;
-		} else if (!spawner.memory.rc_init) {
-			roleSpawner.analyze_rc(spawner);
-			spawner.memory.rc_init = true;
-		} else if (!spawner.memory.tasks_init) {
-			roleSpawner.initialize_tasks(spawner);
-			spawner.memory.tasks_init = true;
-			spawner.memory.task_mode = SPAWN_MODE;
-		}
-	},
 	add_construction_path : function(src, dst) {
 		var path = src.pos.findPathTo(dst.pos, {ignoreCreeps : true, ignoreRoads : true});
 		_.forIn(path, function(loc, step) {

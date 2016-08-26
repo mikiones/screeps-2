@@ -11,8 +11,43 @@ function spawn(spawner, creep_type) {
 	}
 }
 
+function spawner_init(spawner) {
+	if (spawner.memory.sources_init && spawner.memory.rc_init) {
+		return;
+	} else if (!spawner.memory.sources_init) {
+		analyze_sources(spawner);
+		spawner.memory.sources_init = true;
+	} else if (!spawner.memory.rc_init) {
+		analyze_rc(spawner);
+		spawner.memory.rc_init = true;
+	}
+}
+
+function add_contstruction_path(src, dst) {
+	_.forEach(src.pos.findPathTo(dst.pos, {igoreCreeps : true, ignoreRoads : true}),
+		(p) => src.room.createConstructionSite(loc.x, loc.y, STRUCTURE_ROAD));
+}
+
+function analyze_sources(spawner) {
+	var sources = spawner.room.find(FIND_SOURCES);
+	spawner.memory.source_info = _.reduce(sources, function(mining_slots, source, source_id) {
+		mining_slots[source_id] = {};
+		var source_area = spawner.room.lookAtArea(source.pos.y+1, source.pos.x-1, source.pos.y-1, source.pos.x+1, true);
+		mining_slots[source_id].slots = _.filter(source_area, (obj) => obj.type == 'terrain' && obj.terrain != 'wall').length;
+		roleSpawner.add_construction_path(spawner, source);
+	}, {});
+	spawner.memory.source_info = mining_slots;
+}
+
+function analyze_rc(spawner) {
+	add_construction_path(spawner, spawner.room.controller);
+	var sources = spawner.room.find(FIND_SOURCES);
+	_.forEach(sources, (source) => add_construction_path(spawner.room.controller, source));
+}
+
 var behavior = {
 	run_spawner : function(spawner) {
+		spawner_init(spawner);
 		var to_build_type = null;
 		var score = 0.0;
 		_.forEach(creep_types, function(type) {
