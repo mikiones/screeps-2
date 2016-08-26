@@ -22,7 +22,9 @@ var behavior = {
 				to_build_type = type;
 			}
 		});
-		spawn(spawner, to_build_type);
+		if (score > 0.0) {
+			spawn(spawner, to_build_type);
+		}
 	},
 	run_creep : function(creep) {
 		var type = creep.name.split(':')[0];
