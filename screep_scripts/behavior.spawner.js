@@ -11,8 +11,8 @@ function spawn(spawner, creep_type) {
 	}
 }
 
-var spawner_behavior = {
-	run : function(spawner) {
+var behavior = {
+	run_spawner : function(spawner) {
 		var to_build_type = null;
 		var score = 0.0;
 		_.forEach(creep_types, function(type) {
@@ -23,7 +23,14 @@ var spawner_behavior = {
 			}
 		});
 		spawn(spawner, to_build_type);
-	}
+	},
+	run_creep : function(creep) {
+		var type = creep.name.split(':')[0];
+		var creep_type = _.find(creep_types, (ct) => ct.type == type);
+		if (creep_type) {
+			creep_type.behavior(creep);
+		}
+	},
 };
 
 //var creep_machine = new sm.state_machine({
@@ -76,5 +83,5 @@ var spawner_behavior = {
 //});
 
 module.exports = {
-	spawner : spawner_behavior,
+	behavior : behavior,
 }
