@@ -90,7 +90,8 @@ withdraw_from.non_source = chain_state_handlers(withdraw_from.nearest_dropped_en
 var expend_energy_to = {
 	transfer : (actor, target) => move_transfer_on_target(actor, RESOURCE_ENERGY, target),
 	transfer_nearest_type : (actor, struct_type) => move_resource_action_nearest(actor, 'transfer', RESOURCE_ENERGY, FIND_STRUCTURES,
-		(struct) => struct.structureType == struct_type),
+		(struct) => struct.structureType == struct_type
+			&& ((struct.store && struct.store.energy < struct.storeCapacity) || (struct.energy && struct.energy < struct.energyCapacity))),
 	transfer_spawn_ground : (actor) => drop_resource_when_in_range(actor, RESOURCE_ENERGY,
 		get_target.nearest(actor, FIND_STRUCTURES, (struct) => struct.structureType == STRUCTURE_SPAWN), 2),
 	build_nearest_site : (actor) => move_action_nearest(actor, 'build', FIND_CONSTRUCTION_SITES, (c) => true),
