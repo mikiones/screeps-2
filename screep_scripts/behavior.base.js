@@ -57,7 +57,7 @@ var get_target = {
 		var min = null;
 		var score = 100000000;
 		_.forEach(targets, function(target) {
-			if (target.hits < score && target.hits < target.hitsMax/2) {
+			if (target.hits < score) {
 				score = target.hits;
 				min = target;
 			}
@@ -98,6 +98,10 @@ var expend_energy_to = {
 	build_nearest_type : (actor, struct_type) => move_action_nearest(actor, 'build', FIND_CONSTRUCTION_SITES,
 		(const_site) => const_site.structureType == struct_type),
 	upgrade_nearest_rc : (actor) => move_action_on_target(actor, 'upgradeController', actor.room.controller),
+	repair_urgent_lowest_hit : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
+		(struct) => struct.hits < struct.hitsMax/2)),
+	repair_urgent_lowest_hit_type : (actor, struct_type) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
+		(struct) => struct.hits < struct.hitsMax/2 && struct.structureType == struct_type)),
 	repair_lowest_hit : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES, (c) => true)),
 	repair_lowest_hit_type : (actor, struct_type) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
 		(struct) => struct.structureType == struct_type)),
@@ -111,6 +115,9 @@ expend_energy_to.build_nearest_road = (actor) => expend_energy_to.build_nearest_
 expend_energy_to.repair_lowest_hit_container = (actor) => expend_energy_to.repair_lowest_hit_type(actor, STRUCTURE_CONTAINER);
 expend_energy_to.repair_lowest_hit_wall = (actor) => expend_energy_to.repair_lowest_hit_type(actor, STRUCTURE_WALL);
 expend_energy_to.repair_lowest_hit_road = (actor) => expend_energy_to.repair_lowest_hit_type(actor, STRUCTURE_ROAD);
+expend_energy_to.repair_urgent_lowest_hit_container = (actor) => expend_energy_to.repair_urgent_lowest_hit_type(actor, STRUCTURE_CONTAINER);
+expend_energy_to.repair_urgent_lowest_hit_wall = (actor) => expend_energy_to.repair_urgent_lowest_hit_type(actor, STRUCTURE_WALL);
+expend_energy_to.repair_urgent_lowest_hit_road = (actor) => expend_energy_to.repair_urgent_lowest_hit_type(actor, STRUCTURE_ROAD);
 
 function creep_type(type, behavior, body, build_priority) {
 	this.type = type;

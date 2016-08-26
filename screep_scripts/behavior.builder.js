@@ -13,7 +13,7 @@ var builder_creep_type = new base.creep_type('builder', builder_behavior,
 	],
 	function(spawner, state) {
 		var c = this.creep_count(spawner);
-		return 1 - (c / 8.0);
+		return 1 - (c / 4.0);
 	}
 );
 
@@ -29,7 +29,7 @@ var upgrader_creep_type = new base.creep_type('upgrader', upgrader_behavior,
 	],
 	function(spawner, state) {
 		var c = this.creep_count(spawner);
-		return 1 - (c / 8.0);
+		return 1 - (c / 2.0);
 	}
 );
 
@@ -45,13 +45,13 @@ var spawn_filler_creep_type = new base.creep_type('spawn_filler', spawn_filler_b
 	],
 	function(spawner, state) {
 		var c = this.creep_count(spawner);
-		return 1 - (c / 8.0);
+		return 1 - (c / 2.0);
 	}
 );
 
 var repairer_behavior = sm.energy_tasker('container_repairer',
 	base.withdraw_from.non_source,
-	base.chain_handlers(base.expend_to.repair_lowest_hit_container, base.expend_to.repair_lowest_hit_road, base.expend_to.repair_lowest_hit_wall)
+	base.chain_handlers(base.expend_to.repair_urgent_lowest_hit_container, base.expend_to.repair_urgent_lowest_hit_road, base.expend_to.repair_lowest_hit_wall)
 );
 var repairer_creep_type = new base.creep_type('repairer', repairer_behavior,
 	[
@@ -60,7 +60,7 @@ var repairer_creep_type = new base.creep_type('repairer', repairer_behavior,
 		[WORK, CARRY, CARRY, MOVE, MOVE],
 	],
 	function(spawner, state) {
-		if (this.creep_count(spawner) < 3) {
+		if (this.creep_count(spawner) < 2) {
 			return 1.0;
 		}
 		return 0.0;
