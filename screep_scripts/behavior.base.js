@@ -98,9 +98,6 @@ var expend_energy_to = {
 	build_nearest_site : (actor) => move_action_nearest(actor, 'build', FIND_CONSTRUCTION_SITES, (c) => true),
 	build_nearest_type : (actor, struct_type) => move_action_nearest(actor, 'build', FIND_CONSTRUCTION_SITES,
 		(const_site) => const_site.structureType == struct_type),
-	build_nearest_container : (actor) => expend_energy_to.build_nearest_type(actor, STRUCT_CONTAINER),
-	build_nearest_wall : (actor) => expend_energy_to.build_nearest_type(actor, STRUCT_WALL),
-	build_nearest_road : (actor) => expend_energy_to.build_nearest_type(actor, STRUCT_ROAD),
 	upgrade_nearest_rc : (actor) => move_action_on_target(actor, 'upgradeController', actor.room.controller),
 	transfer_nearest_extension : (actor) => move_resource_action_nearest(actor, 'transfer', RESOURCE_ENERGY, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_EXTENSION && struct.energy < struct.energyCapacity),
@@ -111,6 +108,9 @@ var expend_energy_to = {
 	repair_lowest_hit_road : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_ROAD)),
 };
+expend_energy_to.build_nearest_container = (actor) => expend_energy_to.build_nearest_type(actor, STRUCTURE_CONTAINER);
+expend_energy_to.build_nearest_wall = (actor) => expend_energy_to.build_nearest_type(actor, STRUCT_WALL);
+expend_energy_to.build_nearest_road = (actor) => expend_energy_to.build_nearest_type(actor, STRUCT_ROAD);
 
 function creep_type(type, behavior, body, build_priority) {
 	this.type = type;
