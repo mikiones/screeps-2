@@ -114,6 +114,7 @@ expend_energy_to.transfer_nearest_extension = (actor) => expend_energy_to.transf
 expend_energy_to.build_nearest_container = (actor) => expend_energy_to.build_nearest_type(actor, STRUCTURE_CONTAINER);
 expend_energy_to.build_nearest_wall = (actor) => expend_energy_to.build_nearest_type(actor, STRUCTURE_WALL);
 expend_energy_to.build_nearest_road = (actor) => expend_energy_to.build_nearest_type(actor, STRUCTURE_ROAD);
+expend_energy_to.build_nearest_extension = (actor) => expend_energy_to.build_nearest_type(actor, STRUCTURE_EXTENSION);
 expend_energy_to.repair_lowest_hit_container = (actor) => expend_energy_to.repair_lowest_hit_type(actor, STRUCTURE_CONTAINER);
 expend_energy_to.repair_lowest_hit_wall = (actor) => expend_energy_to.repair_lowest_hit_type(actor, STRUCTURE_WALL);
 expend_energy_to.repair_lowest_hit_road = (actor) => expend_energy_to.repair_lowest_hit_type(actor, STRUCTURE_ROAD);

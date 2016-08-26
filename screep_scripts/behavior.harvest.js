@@ -3,8 +3,8 @@ var base = require('behavior.base');
 
 var harvest_transfer_chain = base.chain_handlers(
 		base.expend_to.transfer_nearest_container,
-		base.expend_to.transfer_nearest_spawn,
-		base.expend_to.transfer_nearest_creep_type('builder')
+		base.expend_to.transfer_nearest_creep_type('builder'),
+		base.expend_to.transfer_nearest_spawn
 );
 
 function harvest_transfer_behavior(actor) {
