@@ -98,7 +98,7 @@ var expend_energy_to = {
 		(struct) => struct.structureType == STRUCTURE_CONTAINER)),
 	repair_lowest_hit_wall : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_WALL)),
-	repair_lowest_hit_wall : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
+	repair_lowest_hit_road : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_ROAD)),
 };
 
