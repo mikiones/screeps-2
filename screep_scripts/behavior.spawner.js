@@ -3,7 +3,7 @@ var util = require('util');
 var harvester = require('behavior.harvest');
 var builder = require('behavior.builder');
 
-var creep_types = [harvester.harvester_creep, builder.builder_creep, builder.upgrader_creep, builder.repairer_creep, builder.spawn_filler_creep];
+var creep_types = [harvester.harvester_creep, builder.upgrader_creep, builder.builder_creep, builder.repairer_creep, builder.spawn_filler_creep];
 
 function spawn(spawner, creep_type) {
 	if (creep_type) {

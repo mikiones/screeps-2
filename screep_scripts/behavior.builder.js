@@ -3,7 +3,7 @@ var base = require('behavior.base');
 
 var builder_behavior = sm.energy_tasker('builder',
 	base.withdraw_from.non_source,
-	base.chain_handlers(base.expend_to.build_nearest_site, base.expend_to.repair_lowest_hit_wall)
+	base.chain_handlers(base.expend_to.build_nearest_container, base.expend_to.build_nearest_site, base.expend_to.repair_lowest_hit_wall)
 );
 var builder_creep_type = new base.creep_type('builder', builder_behavior,
 	[
