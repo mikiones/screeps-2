@@ -24,9 +24,9 @@ function move_resource_action_on_target(actor, action, resource_type, target) {
 	return false;
 }
 
-function action_when_adjacent(actor, action, target) {
+function action_when_in_range(actor, action, target, range) {
 	if (target) {
-		if (actor.pos.getRangeTo(target) <= 1) {
+		if (actor.pos.getRangeTo(target) <= range) {
 			actor[action](target);
 		} else {
 			actor.moveTo(target);
@@ -36,9 +36,9 @@ function action_when_adjacent(actor, action, target) {
 	return false;
 }
 
-function drop_resource_when_adjacent(actor, resource_type, target) {
+function drop_resource_when_in_range(actor, resource_type, target, range) {
 	if (target) {
-		if (actor.pos.getRangeTo(target) <= 1) {
+		if (actor.pos.getRangeTo(target) <= range) {
 			actor.drop(resource_type);
 		} else {
 			actor.moveTo(target);
@@ -76,8 +76,8 @@ var expend_energy_to = {
 		(struct) => struct.structureType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity),
 	transfer_nearest_spawn : (actor) => move_resource_action_nearest(actor, 'transfer', RESOURCE_ENERGY, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_SPAWN && struct.energy < struct.energyCapacity),
-	transfer_spawn_ground : (actor) => drop_resource_when_adjacent(actor, RESOURCE_ENERGY,
-		get_target.nearest(actor, FIND_STRUCTURES, (struct) => struct.structureType == STRUCTURE_SPAWN)),
+	transfer_spawn_ground : (actor) => drop_resource_when_in_range(actor, RESOURCE_ENERGY,
+		get_target.nearest(actor, FIND_STRUCTURES, (struct) => struct.structureType == STRUCTURE_SPAWN), 4),
 	build_nearest_site : (actor) => move_action_nearest(actor, 'build', FIND_CONSTRUCTION_SITES, (c) => true),
 	upgrade_nearest_rc : (actor) => move_action_on_target(actor, 'upgradeController', actor.room.controller),
 };
