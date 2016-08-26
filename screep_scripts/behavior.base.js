@@ -57,7 +57,7 @@ var get_target = {
 		var min = null;
 		var score = 100000000;
 		_.forEach(targets, function(target) {
-			if (target.hits < score) {
+			if (target.hits < score && target.hits < target.hitsMax/2) {
 				score = target.hits;
 				min = target;
 			}
