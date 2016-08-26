@@ -7,7 +7,7 @@ var behavior_spawner = require('behavior.spawner');
 var behaviors = {
 	'BUILDER' : behavior_builder.build,
 	'HARVESTER' : behavior_harvest.harvest,
-	'UPGRADER' : behavior_builder.upgrader,
+	'UPGRADER' : behavior_builder.upgrade,
 };
 
 function run(creep) {

@@ -1,15 +1,25 @@
 function move_action_on_target(actor, action, target) {
-	if (target && actor[action](target) == ERR_NOT_IN_RANGE) {
-		actor.moveTo(target);
-		return true;
+	if (target) {
+		var result = actor[action](target);
+		if (result == OK) {
+			return true;
+		} else if (result == ERR_NOT_IN_RANGE) {
+			actor.moveTo(target);
+			return true;
+		}
 	}
 	return false;
 }
 
 function move_transfer_on_target(actor, resource_type, target) {
-	if (target && actor.transfer(target, resource_type) == ERR_NOT_IN_RANGE) {
-		actor.moveTo(target);
-		return true;
+	if (target) {
+		var result = actor.transfer(target, resource_type);
+		if (result == OK) {
+			return true;
+		} else if (result == ERR_NOT_IN_RANGE) {
+			actor.moveTo(target);
+			return true;
+		}
 	}
 	return false;
 }
@@ -21,7 +31,9 @@ function action_when_adjacent(actor, action, target) {
 		} else {
 			actor.moveTo(target);
 		}
+		return true;
 	}
+	return false;
 }
 
 function drop_resource_when_adjacent(actor, resource_type, target) {
@@ -31,7 +43,9 @@ function drop_resource_when_adjacent(actor, resource_type, target) {
 		} else {
 			actor.moveTo(target);
 		}
+		return true;
 	}
+	return false;
 }
 
 var get_target = {
