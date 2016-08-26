@@ -1,13 +1,18 @@
 var sm = require('state_machine');
 var base = require('behavior.base');
 
+var harvest_transfer_chain = base.chain_handlers(
+		base.expend_to.transfer_nearest_container,
+		base.expend_to.transfer_nearest_spawn,
+		base.expend_to.transfer_nearest_creep_type('builder')
+);
+
 function harvest_transfer_behavior(actor) {
 	var count = _.size(actor.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':')[0] == 'harvester'}));
 	if (count >= _.size(Game.creeps)) {
 		return base.expend_to.transfer_nearest_spawn(actor);
 	}
-	return base.chain_handlers(base.expend_to.transfer_nearest_container,
-		base.expend_to.transfer_nearest_spawn, base.expend_to.transfer_nearest_creep_type('builder'))(actor);
+	return harvest_transfer_chain(actor);
 }
 
 var harvest_behavior = sm.energy_tasker('harvest', base.withdraw_from.nearest_source, harvest_transfer_behavior);
