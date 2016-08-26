@@ -84,7 +84,7 @@ var withdraw_from = {
 	nearest_dropped_energy : (actor) => move_action_nearest(actor, 'pickup', FIND_DROPPED_ENERGY, (struct) => true),
 	nearest_spawn : (actor) => move_resource_action_nearest(actor, 'withdraw', RESOURCE_ENERGY, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_SPAWN && struct.energy > 0),
-	non_source : chain_state_handlers(nearest_dropped_energy, nearest_container, nearest_spawn),
+	non_source : chain_state_handlers(withdraw_from.nearest_dropped_energy, withdraw_from.nearest_container, withdraw_from.nearest_spawn),
 };
 
 var expend_energy_to = {
