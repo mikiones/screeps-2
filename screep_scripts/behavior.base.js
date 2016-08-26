@@ -73,6 +73,10 @@ function move_resource_action_nearest(actor, action, resource_type, type, cond) 
 	return move_resource_action_on_target(actor, action, resource_type, get_target.nearest(actor, type, cond));
 }
 
+function chain_state_handlers(...handlers) {
+	return (actor, state) => _.find(handlers, (handle) => handle(actor));
+}
+
 var withdraw_from = {
 	nearest_container : (actor) => move_resource_action_nearest(actor, 'withdraw', RESOURCE_ENERGY, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_CONTAINER && struct.store.energy > 0),
@@ -80,6 +84,7 @@ var withdraw_from = {
 	nearest_dropped_energy : (actor) => move_action_nearest(actor, 'pickup', FIND_DROPPED_ENERGY, (struct) => true),
 	nearest_spawn : (actor) => move_resource_action_nearest(actor, 'withdraw', RESOURCE_ENERGY, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_SPAWN && struct.energy > 0),
+	non_source : chain_state_handlers(nearest_dropped_energy, nearest_container, nearest_spawn),
 };
 
 var expend_energy_to = {
@@ -91,6 +96,11 @@ var expend_energy_to = {
 	transfer_spawn_ground : (actor) => drop_resource_when_in_range(actor, RESOURCE_ENERGY,
 		get_target.nearest(actor, FIND_STRUCTURES, (struct) => struct.structureType == STRUCTURE_SPAWN), 2),
 	build_nearest_site : (actor) => move_action_nearest(actor, 'build', FIND_CONSTRUCTION_SITES, (c) => true),
+	build_nearest_type : (actor, struct_type) => move_action_nearest(actor, 'build', FIND_CONSTRUCTION_SITES,
+		(const_site) => const_site.structureType == struct_type),
+	build_nearest_container : (actor) => expend_energy_to.build_nearest_type(actor, STRUCT_CONTAINER),
+	build_nearest_wall : (actor) => expend_energy_to.build_nearest_type(actor, STRUCT_WALL),
+	build_nearest_road : (actor) => expend_energy_to.build_nearest_type(actor, STRUCT_ROAD),
 	upgrade_nearest_rc : (actor) => move_action_on_target(actor, 'upgradeController', actor.room.controller),
 	transfer_nearest_extension : (actor) => move_resource_action_nearest(actor, 'transfer', RESOURCE_ENERGY, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_EXTENSION && struct.energy < struct.energyCapacity),
@@ -101,10 +111,6 @@ var expend_energy_to = {
 	repair_lowest_hit_road : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_ROAD)),
 };
-
-function chain_state_handlers(...handlers) {
-	return (actor, state) => _.find(handlers, (handle) => handle(actor));
-}
 
 function creep_type(type, behavior, body, build_priority) {
 	this.type = type;
