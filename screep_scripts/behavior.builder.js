@@ -49,9 +49,12 @@ var spawn_filler_creep_type = new base.creep_type('spawn_filler', spawn_filler_b
 	}
 );
 
+var repair_urgent_infrastructure = base.chain_handlers(base.expend_to.repair_urgent_lowest_hit_container, base.expend_to.repair_urgent_lowest_hit_road);
+var repair_infrastructure = base.chain_handlers(base.expend_to.repair_urgent_lowest_hit_container, base.expend_to.repair_urgent_lowest_hit_road);
+
 var repairer_behavior = sm.energy_tasker('container_repairer',
 	base.withdraw_from.non_source,
-	base.chain_handlers(base.expend_to.repair_urgent_lowest_hit_container, base.expend_to.repair_urgent_lowest_hit_road, base.expend_to.repair_lowest_hit_wall)
+	base.chain_handlers(repair_urgent_infrastructure, repair_infrastructure, base.expend_to.repair_lowest_hit_wall)
 );
 var repairer_creep_type = new base.creep_type('repairer', repairer_behavior,
 	[
