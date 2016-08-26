@@ -34,7 +34,7 @@ function analyze_sources(spawner) {
 		mining_slots[source_id] = {};
 		var source_area = spawner.room.lookAtArea(source.pos.y+1, source.pos.x-1, source.pos.y-1, source.pos.x+1, true);
 		mining_slots[source_id].slots = _.filter(source_area, (obj) => obj.type == 'terrain' && obj.terrain != 'wall').length;
-		roleSpawner.add_construction_path(spawner, source);
+		add_construction_path(spawner, source);
 	}, {});
 	spawner.memory.source_info = mining_slots;
 }
