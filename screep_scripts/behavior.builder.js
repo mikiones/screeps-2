@@ -54,7 +54,7 @@ var repair_infrastructure = base.chain_handlers(base.expend_to.repair_urgent_low
 
 var repairer_behavior = sm.energy_tasker('infrastructure_repairer',
 	base.withdraw_from.non_source,
-	base.chain_handlers(repair_urgent_infrastructure, repair_infrastructure, base.expend_to.repair_lowest_hit_wall)
+	base.chain_handlers(repair_urgent_infrastructure, repair_infrastructure, base.expend_to.repair_lowest_hit_wall, base.expend_to.build_nearest_site)
 );
 var repairer_creep_type = new base.creep_type('infrastructure_repairer', repairer_behavior,
 	[
