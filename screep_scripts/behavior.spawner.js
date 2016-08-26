@@ -3,7 +3,7 @@ var util = require('util');
 
 var creep_machine = new sm.state_machine({
 	'BUILD_HARVESTER' : [{state_p : 'BUILD_UPGRADER', cond : (actor, state) => actor.memory.harvesters && actor.memory.harvesters >= 8}],
-	'BUILD_UPGRADER' : [(state_p : 'BUILD_BUILDER', cond : (actor, state) => actor.memory.upgraders && actor.memory.upgraders >= 1}],
+	'BUILD_UPGRADER' : [{state_p : 'BUILD_BUILDER', cond : (actor, state) => actor.memory.upgraders && actor.memory.upgraders >= 1}],
 	'BUILD_BUILDER' : [
 		{state_p : 'RENEW_ALL', cond : (actor, state) => actor.memory.builders && actor.memory.builders >= 4},
 		{state_p : 'BUILD_HARVESTER', cond : (actor, state) => actor.memory.harvesters < 8},
