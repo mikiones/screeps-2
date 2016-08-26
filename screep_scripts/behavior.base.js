@@ -76,7 +76,7 @@ function move_resource_action_nearest(actor, action, resource_type, type, cond) 
 var withdraw_from = {
 	nearest_container : (actor) => move_resource_action_nearest(actor, 'withdraw', RESOURCE_ENERGY, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_CONTAINER && struct.store.energy > 0),
-	nearest_source : (actor) => move_action_nearest(actor, 'harvest', FIND_SOURCES, (struct) => true),
+	nearest_source : (actor) => move_action_nearest(actor, 'harvest', FIND_SOURCES, (source) => source.energy > 0),
 	nearest_dropped_energy : (actor) => move_action_nearest(actor, 'pickup', FIND_DROPPED_ENERGY, (struct) => true),
 	nearest_spawn : (actor) => move_resource_action_nearest(actor, 'withdraw', RESOURCE_ENERGY, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_SPAWN && struct.energy > 0),
