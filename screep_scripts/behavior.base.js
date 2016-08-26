@@ -62,7 +62,7 @@ var get_target = {
 			}
 			min = target;
 		});
-		return target;
+		return min;
 	},
 };
 
