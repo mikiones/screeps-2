@@ -59,8 +59,8 @@ var get_target = {
 		_.forEach(targets, function(target) {
 			if (target.hits < score) {
 				score = target.hits;
+				min = target;
 			}
-			min = target;
 		});
 		return min;
 	},
