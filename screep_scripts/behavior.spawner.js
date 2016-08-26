@@ -28,7 +28,7 @@ var behavior = {
 		var type = creep.name.split(':')[0];
 		var creep_type = _.find(creep_types, (ct) => ct.type == type);
 		if (creep_type) {
-			creep_type.behavior(creep);
+			creep_type.behavior.run(creep);
 		}
 	},
 };
