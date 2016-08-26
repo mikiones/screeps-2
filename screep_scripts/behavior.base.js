@@ -54,7 +54,15 @@ var get_target = {
 	},
 	lowest_hits : function(actor, type, cond) {
 		var targets = actor.room.find(type, { filter : cond });
-		return _.minBy(targets, (target) => target.hits);
+		var min = null;
+		var score = 100000;
+		_.forEach(targets, function(target) {
+			if (target.hits < score) {
+				score = target.hits;
+			}
+			min = target;
+		});
+		return target;
 	},
 };
 
