@@ -28,9 +28,15 @@ function add_construction_path(src, dst) {
 		(p) => src.room.createConstructionSite(p.x, p.y, STRUCTURE_ROAD));
 }
 
+function countMiningPositions(source) {
+	var objs = source.room.lookAtArea(source.pos.y+1, source.pos.x-1, source.pos.y-1, source.pos.x+1, true);
+	return _.size(_.filter(objs, (obj) => obj.type == 'terrain' && obj.terrain != 'wall'))
+}
+
 function analyze_sources(spawner) {
 	var sources = spawner.room.find(FIND_SOURCES);
 	_.forEach(sources, (source) => add_construction_path(spawner, source));
+	source.room.memory.support_miners = _.reduce(sources, (sum, source) => countMiningPositions(source) + sum, 0);
 }
 
 function analyze_rc(spawner) {
