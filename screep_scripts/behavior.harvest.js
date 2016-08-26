@@ -13,10 +13,8 @@ var harvester_creep_type = new base.creep_type('harvester', harvest_behavior,
 		[WORK, WORK, CARRY, MOVE],
 	],
 	function(spawner, state) {
-		if (this.creep_count(spawner) < 8) {
-			return 1.0;
-		}
-		return 0.0;
+		var c = this.creep_count(spawner);
+		return 1 - (c / 8.0);
 	}
 );
 

@@ -12,10 +12,8 @@ var builder_creep_type = new base.creep_type('builder', builder_behavior,
 		[WORK, CARRY, CARRY, MOVE, MOVE],
 	],
 	function(spawner, state) {
-		if (this.creep_count(spawner) < 4) {
-			return 1.0;
-		}
-		return 0.0;
+		var c = this.creep_count(spawner);
+		return 1 - (c / 8.0);
 	}
 );
 
@@ -30,10 +28,8 @@ var upgrader_creep_type = new base.creep_type('upgrader', upgrader_behavior,
 		[WORK, CARRY, MOVE, MOVE, MOVE],
 	],
 	function(spawner, state) {
-		if (this.creep_count(spawner) < 1) {
-			return 1.0;
-		}
-		return 0.0;
+		var c = this.creep_count(spawner);
+		return 1 - (c / 8.0);
 	}
 );
 
@@ -48,10 +44,8 @@ var spawn_filler_creep_type = new base.creep_type('spawn_filler', spawn_filler_b
 		[CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
 	],
 	function(spawner, state) {
-		if (this.creep_count(spawner) < 2) {
-			return 1.0;
-		}
-		return 0.0;
+		var c = this.creep_count(spawner);
+		return 1 - (c / 8.0);
 	}
 );
 
