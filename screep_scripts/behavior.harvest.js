@@ -12,9 +12,9 @@ var harvester_creep_type = new base.creep_type('harvester', harvest_behavior,
 		[WORK, WORK, CARRY, MOVE],
 		[WORK, WORK, CARRY, MOVE],
 	],
-	function(spawner, state) {
-		var c = this.creep_count(spawner);
-		if (c < spawner.room.memory.support_miners) {
+	function(room, state) {
+		var c = this.creep_count(room);
+		if (c < room.memory.support_miners) {
 			return 1.0;
 		}
 		return 0.0;

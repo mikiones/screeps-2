@@ -51,7 +51,7 @@ var behavior = {
 		var to_build_type = null;
 		var score = 0.0;
 		_.forEach(creep_types, function(type) {
-			var bp = type.build_priority(spawner, '');
+			var bp = type.build_priority(spawner.room, '');
 			if (bp > score) {
 				score = bp;
 				to_build_type = type;
