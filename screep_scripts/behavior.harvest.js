@@ -7,8 +7,7 @@ function harvest_transfer_behavior(actor) {
 		return base.expend_to.transfer_nearest_spawn(actor);
 	}
 	return base.chain_handlers(base.expend_to.transfer_nearest_container,
-		base.expend_to.transfer_nearest_spawn, base.expend_to.transfer_spawn_ground)(actor);
-
+		base.expend_to.transfer_nearest_spawn, base.expend_to.transfer_nearest_creep_type('builder'))(actor);
 }
 
 var harvest_behavior = sm.energy_tasker('harvest', base.withdraw_from.nearest_source, harvest_transfer_behavior);

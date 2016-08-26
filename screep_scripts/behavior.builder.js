@@ -79,7 +79,7 @@ var wall_repairer_creep_type = new base.creep_type('wall_repairer', wall_repaire
 		[WORK, CARRY, CARRY, MOVE, MOVE],
 	],
 	function(room, state) {
-		var wall_count = _.size(room.find(FIND_STRUCTURES, {filter : (struct) => struct.structureType == STRUCTURE_WALL}));
+		var wall_count = _.size(room.find(FIND_MY_STRUCTURES, {filter : (struct) => struct.structureType == STRUCTURE_WALL}));
 		if (wall_count - this.creep_count(room) * 10 > 10) {
 			return 0.7;
 		}
