@@ -93,7 +93,7 @@ var expend_energy_to = {
 		(struct) => struct.structureType == struct_type
 			&& ((struct.store && struct.store.energy < struct.storeCapacity) || (struct.energy && struct.energy < struct.energyCapacity))),
 	transfer_nearest_creep_type : (creep_type_name) => (actor) => move_resource_action_nearest(actor, 'transfer', RESOURCE_ENERGY, FIND_MY_CREEPS,
-			(creep) => creep.name.split(':')[0] == creep_type_name),
+			(creep) => creep.name.split(':')[0] == creep_type_name && creep.energy < creep.energyCapacity),
 	transfer_spawn_ground : (actor) => drop_resource_when_in_range(actor, RESOURCE_ENERGY,
 		get_target.nearest(actor, FIND_MY_STRUCTURES, (struct) => struct.structureType == STRUCTURE_SPAWN), 2),
 	build_nearest_site : (actor) => move_action_nearest(actor, 'build', FIND_CONSTRUCTION_SITES, (c) => true),
