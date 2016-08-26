@@ -2,7 +2,7 @@ var sm = require('state_machine');
 var base = require('behavior.base');
 
 var builder_behavior = sm.energy_tasker('builder',
-	base.chain_handlers(base.withdraw_from.nearest_dropped_energy, base.withdraw_from.nearest_container),
+	base.chain_handlers(base.withdraw_from.nearest_dropped_energy, base.withdraw_from.nearest_container, base.withdraw_from.nearest_source),
 	base.chain_handlers(base.expend_to.build_nearest_site, base.expend_to.repair_lowest_hit_wall)
 );
 var builder_creep_type = new base.creep_type('builder', builder_behavior,
@@ -18,7 +18,7 @@ var builder_creep_type = new base.creep_type('builder', builder_behavior,
 );
 
 var upgrader_behavior = sm.energy_tasker('upgrader',
-	base.chain_handlers(base.withdraw_from.nearest_dropped_energy, base.withdraw_from.nearest_container),
+	base.chain_handlers(base.withdraw_from.nearest_dropped_energy, base.withdraw_from.nearest_container, base.withdraw_from.nearest_source),
 	base.expend_to.upgrade_nearest_rc
 );
 var upgrader_creep_type = new base.creep_type('upgrader', upgrader_behavior,
@@ -50,7 +50,7 @@ var spawn_filler_creep_type = new base.creep_type('spawn_filler', spawn_filler_b
 );
 
 var repairer_behavior = sm.energy_tasker('container_repairer',
-	base.chain_handlers(base.withdraw_from.nearest_dropped_energy, base.withdraw_from.nearest_container),
+	base.chain_handlers(base.withdraw_from.nearest_dropped_energy, base.withdraw_from.nearest_container, base.withdraw_from.nearest_source),
 	base.chain_handlers(base.expend_to.repair_lowest_hit_container, base.expend_to.repair_lowest_hit_road, base.expend_to.repair_lowest_hit_wall)
 );
 var repairer_creep_type = new base.creep_type('repairer', repairer_behavior,
