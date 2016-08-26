@@ -85,22 +85,18 @@ var withdraw_from = {
 	nearest_spawn : (actor) => move_resource_action_nearest(actor, 'withdraw', RESOURCE_ENERGY, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_SPAWN && struct.energy > 0),
 };
-withdraw_from.non_source = chain_state_handlers(withdraw_from.nearest_dropped_energy, withdraw_from.nearest_container, withdraw_from.nearest_spawn);
+withdraw_from.non_source = chain_state_handlers(withdraw_from.nearest_dropped_energy, withdraw_from.nearest_container);
 
 var expend_energy_to = {
 	transfer : (actor, target) => move_transfer_on_target(actor, RESOURCE_ENERGY, target),
-	transfer_nearest_container : (actor) => move_resource_action_nearest(actor, 'transfer', RESOURCE_ENERGY, FIND_STRUCTURES,
-		(struct) => struct.structureType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity),
-	transfer_nearest_spawn : (actor) => move_resource_action_nearest(actor, 'transfer', RESOURCE_ENERGY, FIND_STRUCTURES,
-		(struct) => struct.structureType == STRUCTURE_SPAWN && struct.energy < struct.energyCapacity),
+	transfer_nearest_type : (actor, struct_type) => move_resource_action_nearest(actor, 'transfer', RESOURCE_ENERGY, FIND_STRUCTURES,
+		(struct) => struct.structureType == struct_type),
 	transfer_spawn_ground : (actor) => drop_resource_when_in_range(actor, RESOURCE_ENERGY,
 		get_target.nearest(actor, FIND_STRUCTURES, (struct) => struct.structureType == STRUCTURE_SPAWN), 2),
 	build_nearest_site : (actor) => move_action_nearest(actor, 'build', FIND_CONSTRUCTION_SITES, (c) => true),
 	build_nearest_type : (actor, struct_type) => move_action_nearest(actor, 'build', FIND_CONSTRUCTION_SITES,
 		(const_site) => const_site.structureType == struct_type),
 	upgrade_nearest_rc : (actor) => move_action_on_target(actor, 'upgradeController', actor.room.controller),
-	transfer_nearest_extension : (actor) => move_resource_action_nearest(actor, 'transfer', RESOURCE_ENERGY, FIND_STRUCTURES,
-		(struct) => struct.structureType == STRUCTURE_EXTENSION && struct.energy < struct.energyCapacity),
 	repair_lowest_hit_container : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_CONTAINER)),
 	repair_lowest_hit_wall : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
@@ -108,6 +104,9 @@ var expend_energy_to = {
 	repair_lowest_hit_road : (actor) => move_action_on_target(actor, 'repair', get_target.lowest_hits(actor, FIND_STRUCTURES,
 		(struct) => struct.structureType == STRUCTURE_ROAD)),
 };
+expend_energy_to.transfer_nearest_container = (actor) => expend_energy_to.transfer_nearest_type(actor, STRUCTURE_CONTAINER);
+expend_energy_to.transfer_nearest_spawn = (actor) => expend_energy_to.transfer_nearest_type(actor, STRUCTURE_SPAWN);
+expend_energy_to.transfer_nearest_extension = (actor) => expend_energy_to.transfer_nearest_type(actor, STRUCTURE_EXTENSION);
 expend_energy_to.build_nearest_container = (actor) => expend_energy_to.build_nearest_type(actor, STRUCTURE_CONTAINER);
 expend_energy_to.build_nearest_wall = (actor) => expend_energy_to.build_nearest_type(actor, STRUCT_WALL);
 expend_energy_to.build_nearest_road = (actor) => expend_energy_to.build_nearest_type(actor, STRUCT_ROAD);
