@@ -92,7 +92,7 @@ function creep_type(type, behavior, body, build_priority) {
 	this.body = body;
 	this.build_priority = build_priority;
 	this.creep_count = function(spawner) {
-		return  _.size(spawner.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':')[0] == this.type));
+		return  _.size(spawner.room.find(FIND_MY_CREEPS, {filter : (creep) => creep.name.split(':')[0] == this.type}));
 	};
 };
 

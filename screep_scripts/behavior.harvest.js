@@ -6,7 +6,7 @@ var harvest_behavior = sm.energy_tasker('harvest',
 	base.chain_handlers(base.expend_to.transfer_nearest_container,
 		base.expend_to.transfer_nearest_spawn, base.expend_to.transfer_spawn_ground)
 );
-var harvest_creep_type = new base.creep_type('harvester', harvest_behavior,
+var harvester_creep_type = new base.creep_type('harvester', harvest_behavior,
 	[
 		[WORK, WORK, CARRY, MOVE],
 		[WORK, WORK, CARRY, MOVE],
@@ -22,5 +22,5 @@ var harvest_creep_type = new base.creep_type('harvester', harvest_behavior,
 
 module.exports = {
 	harvest : harvest_behavior,
-	harvester_creep,
+	harvester_creep : harvester_creep_type,
 }

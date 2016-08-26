@@ -1,13 +1,13 @@
 var sm = require('state_machine');
 var util = require('util');
-var havester = require('behavior.harvest');
+var harvester = require('behavior.harvest');
 var builder = require('behavior.builder');
 
 var creep_types = [harvester.harvester_creep, builder.builder_creep, builder.upgrader_creep];
 
-var spawn(spawner, creep_type) {
+function spawn(spawner, creep_type) {
 	if (creep_type) {
-		spawner.createCreep(creep_type.body, creep_type.type.concat(':').concat(util.make_id()));
+		spawner.createCreep(creep_type.body[spawner.room.controller.level-1], creep_type.type.concat(':').concat(util.make_id()));
 	}
 }
 
