@@ -30,13 +30,7 @@ function add_construction_path(src, dst) {
 
 function analyze_sources(spawner) {
 	var sources = spawner.room.find(FIND_SOURCES);
-	spawner.memory.source_info = _.reduce(sources, function(mining_slots, source, source_id) {
-		mining_slots[source_id] = {};
-		var source_area = spawner.room.lookAtArea(source.pos.y+1, source.pos.x-1, source.pos.y-1, source.pos.x+1, true);
-		mining_slots[source_id].slots = _.filter(source_area, (obj) => obj.type == 'terrain' && obj.terrain != 'wall').length;
-		add_construction_path(spawner, source);
-	}, {});
-	spawner.memory.source_info = mining_slots;
+	_.forEach(sources, (source) => add_construction_path(spawner, source));
 }
 
 function analyze_rc(spawner) {
