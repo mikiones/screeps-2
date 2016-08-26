@@ -46,4 +46,5 @@ module.exports = {
 	build : builder_behavior,
 	upgrade : upgrader_behavior,
 	builder_creep : builder_creep_type,
+	upgrader_creep : upgrader_creep_type,
 }

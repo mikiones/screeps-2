@@ -100,4 +100,5 @@ module.exports = {
 	chain_handlers : chain_state_handlers,
 	withdraw_from : withdraw_from,
 	expend_to : expend_energy_to,
+	creep_type : creep_type,
 };
