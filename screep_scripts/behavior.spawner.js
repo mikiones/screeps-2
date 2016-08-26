@@ -29,7 +29,7 @@ function add_construction_path(src, dst) {
 }
 
 function countMiningPositions(source) {
-	var objs = source.room.lookForAtArea(LOOK_TERRAIN, source.pos.y+1, source.pos.x-1, source.pos.y-1, source.pos.x+1, true);
+	var objs = source.room.lookForAtArea(LOOK_TERRAIN, source.pos.y-1, source.pos.x-1, source.pos.y+1, source.pos.x+1, true);
 	return _.size(_.filter(objs, (obj) => obj.terrain != 'wall'))
 }
 
