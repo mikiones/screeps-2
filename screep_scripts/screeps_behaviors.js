@@ -43,8 +43,13 @@ function get_nearest_spawn(context) {
 	var target = context.actor.pos.findClosestByPath(FIND_MY_SPAWNS);
 	return target;
 }
+function get_room_controller(context) {
+	var target = context.actor.room.controller;
+	return target;
+}
 var push_nearest_source = new (push_stack_value(get_nearest_source));
 var push_nearest_spawn = new (push_stack_value(get_nearest_spawn));
+var push_room_controller  = new (push_stack_value(get_room_controller));
 
 var creep_status = (func) => btree.builders.context_operation(function(context) {
 	if (func(context.actor)) {
@@ -70,7 +75,9 @@ var creep_resource_action_stack = (action, resource_type) => with_stack_value(fu
 var creep_empty_energy = new (creep_status(creep => creep.carry.energy == 0));
 var creep_not_full_energy = new (creep_status(creep => creep.carry.energy < creep.carryCapacity));
 var creep_harvest_stack = new (creep_action_stack('harvest'));
+var creep_upgrade_stack = new (creep_action_stack('upgradeController'));
 var creep_transfer_stack = new (creep_resource_action_stack('transfer', RESOURCE_ENERGY));
+var creep_withdraw_stack = new (creep_resource_action_stack('withdraw', RESOURCE_ENERGY));
 var creep_move_to_stack = new (creep_action_stack('moveTo'));
 var creep_succeeding_move_to_stack = new btree.decorators.always_succeed(creep_move_to_stack);
 var creep_drop_energy = new (btree.builders.context_operation(function(context) {
@@ -91,6 +98,8 @@ module.exports = {
 		empty_energy : creep_empty_energy,
 		not_full_energy : creep_not_full_energy,
 		harvest_stack : creep_harvest_stack,
+		upgrade_stack : creep_upgrade_stack,
+		withdraw_stack : creep_withdraw_stack,
 		transfer_stack : creep_transfer_stack,
 		move_to_stack : creep_move_to_stack,
 		succeeding_move_to_stack : creep_succeeding_move_to_stack,
@@ -99,5 +108,6 @@ module.exports = {
 	adjacent_to_stack : adjacent_to_stack,
 	push_nearest_spawn : push_nearest_spawn,
 	push_nearest_source : push_nearest_source,
+	push_room_controller : push_room_controller,
 	pop_stack : pop_stack,
 };
