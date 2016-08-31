@@ -1,10 +1,7 @@
 require('extended_functionality');
 
-var scbt = require('screeps_behaviors');
+var harvester_behavior = require('behavior.harvesters');
 
 module.exports.loop = function() {
-	_.forEach(Game.creeps, function(creep) {
-		var context = scbt.create_context(creep, Game);
-		scbt.mine.run(context);
-	});
+	_.forEach(Game.creeps, harvester_behavior.simple);
 }

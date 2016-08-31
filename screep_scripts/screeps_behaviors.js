@@ -73,28 +73,31 @@ var creep_harvest_stack = new (creep_action_stack('harvest'));
 var creep_transfer_stack = new (creep_resource_action_stack('transfer', RESOURCE_ENERGY));
 var creep_move_to_stack = new (creep_action_stack('moveTo'));
 var creep_succeeding_move_to_stack = new btree.decorators.always_succeed(creep_move_to_stack);
-
 var creep_drop_energy = new (btree.builders.context_operation(function(context) {
 	context.actor.drop(RESOURCE_ENERGY);
 	return btree.SUCCESS;
 }));
 
-var next_to_stack = new (with_stack_value(function(context, target) {
+var adjacent_to_stack = new (with_stack_value(function(context, target) {
 	if (context.actor.pos.getRangeTo(target) <= 1) {
 		return btree.SUCCESS;
 	}
 	return btree.FAILURE;
 }));
 
-var drop_if_by_stack = new btree.composites.sequence([next_to_stack, creep_drop_energy]);
-var creep_harvest_or_move = new btree.composites.select([creep_harvest_stack, creep_succeeding_move_to_stack]);
-var creep_transfer_or_move = new btree.composites.select([creep_transfer_stack, drop_if_by_stack, creep_succeeding_move_to_stack]);
-var creep_harvest_nearest_source = new btree.composites.sequence([creep_not_full_energy, push_nearest_source, creep_harvest_or_move, pop_stack]);
-var creep_transfer_nearest_spawn = new btree.composites.sequence([push_nearest_spawn, creep_transfer_or_move, pop_stack]);
-
-var miner_tree = new btree.composites.sequence([new btree.decorators.inverter(creep_harvest_nearest_source), creep_transfer_nearest_spawn]);
-
 module.exports = {
 	create_context : create_context,
-	mine : miner_tree,
+	creep : {
+		empty_energy : creep_empty_energy,
+		not_full_energy : creep_not_full_energy,
+		harvest_stack : creep_harvest_stack,
+		transfer_stack : creep_transfer_stack,
+		move_to_stack : creep_move_to_stack,
+		succeeding_move_to_stack : creep_succeeding_move_to_stack,
+		drop_energy : creep_drop_energy,
+	},
+	adjacent_to_stack : adjacent_to_stack,
+	push_nearest_spawn : push_nearest_spawn,
+	push_nearest_source : push_nearest_source,
+	pop_stack : pop_stack,
 };
