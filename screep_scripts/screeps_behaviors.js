@@ -63,12 +63,11 @@ var creep_harvest_source = new (with_stack_value(function(context, source) {
 
 var creep_move_to = new (with_stack_value(function(context, source) {
 	context.actor.moveTo(source);
-	return btree.FAILURE;
+	return btree.SUCCESS;
 }));
 
 var creep_harvest = new btree.composites.select([creep_harvest_source, creep_move_to]);
 var creep_mine = new btree.composites.sequence([push_nearest_source, creep_not_full_energy, creep_harvest]);
-
 
 module.exports = {
 	create_context : create_context,
