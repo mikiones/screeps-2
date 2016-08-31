@@ -86,7 +86,7 @@ var creep_drop_energy = new (btree.builders.context_operation(function(context) 
 }));
 
 var adjacent_to_stack = new (with_stack_value(function(context, target) {
-	if (context.actor.pos.getRangeTo(target) <= 1) {
+	if (context.actor.pos.inRangeTo(target, 2)) {
 		return btree.SUCCESS;
 	}
 	return btree.FAILURE;
@@ -104,6 +104,8 @@ module.exports = {
 		move_to_stack : creep_move_to_stack,
 		succeeding_move_to_stack : creep_succeeding_move_to_stack,
 		drop_energy : creep_drop_energy,
+	},
+	room : {
 	},
 	adjacent_to_stack : adjacent_to_stack,
 	push_nearest_spawn : push_nearest_spawn,
