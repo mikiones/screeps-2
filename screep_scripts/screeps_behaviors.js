@@ -4,7 +4,7 @@ function create_context(actor, game) {
 	return {actor : actor, game : game}
 }
 
-var push_stack_value = func => btree.builders.context_operation((context) => {
+var push_stack_value = func => btree.builders.context_operation(function(context) {
 	if (context.stack) {
 		context.stack.push(func(context));
 	} else {
@@ -13,19 +13,27 @@ var push_stack_value = func => btree.builders.context_operation((context) => {
 	return btree.SUCCESS;
 });
 
-var with_stack_value = func => btree.builders.context_operation((context) => {
+var with_stack_value = func => btree.builders.context_operation(function(context) {
 	if (context.stack && context.stack.length > 0) {
 		return func(context, context.stack[context.stack.length-1]);
 	}
 	return btree.FAILURE;
 });
 
-var pop_stack_value = func => btree.builders.context_operation((context) => {
+var with_pop_stack_value = func => btree.builders.context_operation(function(context) {
 	if (context.stack && context.stack.length > 0) {
 		return func(context, context.stack.pop());
 	}
 	return btree.FAILURE;
 });
+
+var pop_stack = new (btree.builders.context_operation(function(context) {
+	if (context.stack && context.stack.length > 0) {
+		context.stack.pop();
+		return btree.SUCCESS;
+	}
+	return btree.FAILURE;
+}));
 
 function get_nearest_source(context) {
 	var target = context.actor.pos.findClosestByPath(FIND_SOURCES);
@@ -52,7 +60,7 @@ var creep_not_full_energy = new (btree.builders.context_operation(function(conte
 	return btree.FAILURE;
 }));
 
-var creep_harvest_source = new (with_stack_value(function(context, source) {
+var creep_harvest_stack = new (with_stack_value(function(context, source) {
 	if (context.actor.harvest) {
 		if (context.actor.harvest(source) == OK) {
 			return btree.SUCCESS;
@@ -61,15 +69,15 @@ var creep_harvest_source = new (with_stack_value(function(context, source) {
 	return btree.FAILURE;
 }));
 
-var creep_move_to = new (with_stack_value(function(context, source) {
+var creep_move_to_stack = new (with_stack_value(function(context, source) {
 	context.actor.moveTo(source);
 	return btree.SUCCESS;
 }));
 
-var creep_harvest = new btree.composites.select([creep_harvest_source, creep_move_to]);
-var creep_mine = new btree.composites.sequence([push_nearest_source, creep_not_full_energy, creep_harvest]);
+var creep_harvest_or_move = new btree.composites.select([creep_harvest_stack, creep_move_to_stack]);
+var creep_harvest_nearest_source = new btree.composites.sequence([creep_not_full_energy, push_nearest_source, creep_harvest_or_move, pop_stack]);
 
 module.exports = {
 	create_context : create_context,
-	mine : creep_mine,
+	mine : creep_harvest_or_move,
 };
