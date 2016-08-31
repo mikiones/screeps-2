@@ -26,3 +26,9 @@ function get_nearest_source(context) {
 }
 
 var push_nearest_source = new (push_stack_value(get_nearest_source));
+var check_push_nearest_source = new btree.composites.sequence([push_nearest_source, btree.leafs.print_context]);
+
+module.exports = {
+	create_context : create_context,
+	test : check_push_nearest_source,
+};
