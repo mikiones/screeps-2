@@ -26,7 +26,12 @@ function get_nearest_source(context) {
 }
 
 var push_nearest_source = new (push_stack_value(get_nearest_source));
-var check_push_nearest_source = new btree.composites.sequence([push_nearest_source, btree.leafs.print_context]);
+var get_path_to_nearest_source = new (with_stack_value(function(context, pos) {
+	var path = context.actor.pos.findPathTo(pos);
+	context.stack.push(path);
+}));
+var push_path_to_nearest_source = new btree.composites.sequence([push_nearest_source, get_path_to_nearest_source]);
+var check_push_nearest_source = new btree.composites.sequence([push_path_to_nearest_source, btree.leafs.print_context]);
 
 module.exports = {
 	create_context : create_context,
