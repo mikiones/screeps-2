@@ -61,31 +61,44 @@ var creep_not_full_energy = new (btree.builders.context_operation(function(conte
 	return btree.FAILURE;
 }));
 
-var creep_harvest_stack = new (with_stack_value(function(context, source) {
+var creep_harvest_stack = new (with_stack_value(function(context, target) {
 	if (context.actor.harvest) {
-		if (context.actor.harvest(source) == OK) {
+		if (context.actor.harvest(target) == OK) {
 			return btree.SUCCESS;
 		}
 	}
 	return btree.FAILURE;
 }));
 
-var creep_transfer_stack = new (with_stack_value(function(context, source) {
+var creep_transfer_stack = new (with_stack_value(function(context, target) {
 	if (context.actor.transfer) {
-		if (context.actor.transfer(source, RESOURCE_ENERGY) == OK) {
+		if (context.actor.transfer(target, RESOURCE_ENERGY) == OK) {
 			return btree.SUCCESS;
 		}
 	}
 	return btree.FAILURE;
 }));
 
-var creep_move_to_stack = new (with_stack_value(function(context, source) {
-	context.actor.moveTo(source);
+var creep_move_to_stack = new (with_stack_value(function(context, target) {
+	context.actor.moveTo(target);
 	return btree.SUCCESS;
 }));
 
+var creep_drop_energy = new (btree.builders.context_operation(function(context) {
+	context.actor.drop(RESOURCE_ENERGY);
+	return btree.SUCCESS;
+}));
+
+var next_to_stack = new (with_stack_value(function(context, target) {
+	if (context.actor.pos.getRangeTo(target) <= 1) {
+		return btree.SUCCESS;
+	}
+	return btree.FAILURE;
+}));
+
+var drop_if_by_stack = new btree.composites.sequence([next_to_stack, creep_drop_energy]);
 var creep_harvest_or_move = new btree.composites.select([creep_harvest_stack, creep_move_to_stack]);
-var creep_transfer_or_move = new btree.composites.select([creep_transfer_stack, creep_move_to_stack]);
+var creep_transfer_or_move = new btree.composites.select([creep_transfer_stack, drop_if_by_stack, creep_move_to_stack]);
 var creep_harvest_nearest_source = new btree.composites.sequence([creep_not_full_energy, push_nearest_source, creep_harvest_or_move, pop_stack]);
 var creep_transfer_nearest_spawn = new btree.composites.sequence([push_nearest_spawn, creep_transfer_or_move, pop_stack]);
 
