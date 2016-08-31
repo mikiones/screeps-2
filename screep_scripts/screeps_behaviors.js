@@ -35,6 +35,14 @@ var pop_stack = new (btree.builders.context_operation(function(context) {
 	return btree.FAILURE;
 }));
 
+var save_memory_key = (key, func) => btree.builders.context_operation(function(context) {
+	var res = func(context);
+	if (res) {
+		context.actor.memory[key] = res;
+	}
+	return btree.SUCCESS;
+});
+
 function get_nearest_source(context) {
 	var target = context.actor.pos.findClosestByPath(FIND_SOURCES);
 	return target;
@@ -65,8 +73,21 @@ var creep_action_stack = (action) => with_stack_value(function(context, target) 
 	return btree.FAILURE;
 });
 
+var creep_action_target = (action) => btree.builders.context_operation(function(context) {
+	if (context.actor.memory.target && context.actor[action](context.actor.memory.target) == OK) {
+		return btree.SUCCESS;
+	}
+	return btree.FAILURE;
+});
+
 var creep_resource_action_stack = (action, resource_type) => with_stack_value(function(context, target) {
 	if (context.actor[action](target, resource_type) == OK) {
+		return btree.SUCCESS;
+	}
+	return btree.FAILURE;
+});
+var creep_resource_action_target = (action, resource_type) => btree.builders.context_operation(function(context) {
+	if (context.actor.memory.target && context.actor[action](context.actor.memory.target, resource_type) == OK) {
 		return btree.SUCCESS;
 	}
 	return btree.FAILURE;
@@ -80,9 +101,23 @@ var creep_transfer_stack = new (creep_resource_action_stack('transfer', RESOURCE
 var creep_withdraw_stack = new (creep_resource_action_stack('withdraw', RESOURCE_ENERGY));
 var creep_move_to_stack = new (creep_action_stack('moveTo'));
 var creep_succeeding_move_to_stack = new btree.decorators.always_succeed(creep_move_to_stack);
+
+var creep_harvest_target = new (creep_action_target('harvest'));
+var creep_upgrade_target = new (creep_action_target('upgradeController'));
+var creep_transfer_target = new (creep_resource_action_target('transfer', RESOURCE_ENERGY));
+var creep_withdraw_target = new (creep_resource_action_target('withdraw', RESOURCE_ENERGY));
+var creep_move_to_target = new (creep_action_target('moveTo'));
+var creep_succeeding_move_to_target = new btree.decorators.always_succeed(creep_move_to_target);
+
 var creep_drop_energy = new (btree.builders.context_operation(function(context) {
 	context.actor.drop(RESOURCE_ENERGY);
 	return btree.SUCCESS;
+}));
+
+var pop_stack_to_target_memory = new (save_memory_key('target', function(context) {
+	if (context.stack && context.stack.length > 0) {
+		return context.stack.pop();
+	}
 }));
 
 var adjacent_to_stack = new (with_stack_value(function(context, target) {
@@ -103,11 +138,19 @@ module.exports = {
 		transfer_stack : creep_transfer_stack,
 		move_to_stack : creep_move_to_stack,
 		succeeding_move_to_stack : creep_succeeding_move_to_stack,
+		harvest_target : creep_harvest_target,
+		upgrade_target : creep_upgrade_target,
+		withdraw_target : creep_withdraw_target,
+		transfer_target : creep_transfer_target,
+		move_to_target : creep_move_to_target,
+		succeeding_move_to_target : creep_succeeding_move_to_target,
 		drop_energy : creep_drop_energy,
 	},
 	room : {
 	},
 	adjacent_to_stack : adjacent_to_stack,
+	save_memory_key : save_memory_key,
+	pop_stack_to_target_memory : pop_stack_to_target_memory,
 	push_nearest_spawn : push_nearest_spawn,
 	push_nearest_source : push_nearest_source,
 	push_room_controller : push_room_controller,
