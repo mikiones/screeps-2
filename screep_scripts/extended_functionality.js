@@ -27,13 +27,23 @@ Source.prototype.registerHarvester = function(creep) {
 	}
 	if (!this.room.memory.sources[this.id][creep.id]) {
 		var max_allowed = this.harvestingPositions();
-		if (max_allowed > _.size(room.memory.sources[this.id])) {
-			this.room.memory.sources[this.id][creep.id] = creep.getActiveBodyParts(WORK);
+		if (max_allowed > _.size(this.room.memory.sources[this.id])) {
+			this.room.memory.sources[this.id][creep.id] = creep.getActiveBodyparts(WORK);
 			return true;
 		}
 	}
 	return false;
 };
+
+Source.prototype.availablePositions = function() {
+	if (!this.room.memory.sources) {
+		this.room.memory.sources = {};
+	}
+	if (!this.room.memory.sources[this.id]) {
+		this.room.memory.sources[this.id] = {};
+	}
+	return this.harvestingPositions() - _.size(this.room.memory.sources[this.id]);
+}
 
 Room.prototype.creepsOfRole = function(role) {
 	return this.find(FIND_CREEPS, {filter : creep => creep.memory.role && creep.memory.role == role});

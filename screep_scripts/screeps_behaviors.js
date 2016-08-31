@@ -161,9 +161,11 @@ module.exports = {
 	},
 	adjacent_to_stack : adjacent_to_stack,
 	save_memory_key : save_memory_key,
+	with_stack_value : with_stack_value,
 	pop_stack_to_target_memory : pop_stack_to_target_memory,
 	push_nearest_spawn : push_nearest_spawn,
 	push_nearest_source : push_nearest_source,
 	push_room_controller : push_room_controller,
+	push_stack_value : push_stack_value,
 	pop_stack : pop_stack,
 };
