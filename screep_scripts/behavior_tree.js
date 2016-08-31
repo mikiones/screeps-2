@@ -106,16 +106,27 @@ var inverter = node_builder(Decorator, function(context) {
 	}
 	return RUNNING;
 });
+
 var repeat_until_success = node_builder(Decorator, function(context) {
 	if (this.child.run(context) != SUCCESS) {
 		return RUNNING;
 	}
 	return SUCCESS;
 });
+
 var repeat_until_failure = node_builder(Decorator, function(context) {
 	if (this.child.run(context) != FAILURE) {
 		return RUNNING;
 	}
+	return SUCCESS;
+});
+
+var always_fail = node_builder(Decorator, function(context) {
+	this.child.run(context);
+	return FAILURE;
+});
+var always_succeed = node_builder(Decorator, function(context) {
+	this.child.run(context);
 	return SUCCESS;
 });
 
@@ -131,6 +142,8 @@ module.exports = {
 	},
 	decorators : {
 		inverter : inverter,
+		always_fail : always_fail,
+		always_succeed : always_succeed,
 		repeat_until_success : repeat_until_success,
 		repeat_until_failure : repeat_until_failure,
 	},
