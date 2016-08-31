@@ -1,0 +1,9 @@
+{
+	"name" : "behavior_tree",
+	"version" : "0.1.0",
+	"dependencies" : {
+		"lodash" : "3.10.1"
+	},
+	"main" : "index.js"
+}
+
