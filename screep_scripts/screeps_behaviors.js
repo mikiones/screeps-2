@@ -74,8 +74,11 @@ var creep_action_stack = (action) => with_stack_value(function(context, target) 
 });
 
 var creep_action_target = (action) => btree.builders.context_operation(function(context) {
-	if (context.actor.memory.target && context.actor[action](context.actor.memory.target) == OK) {
-		return btree.SUCCESS;
+	if (context.actor.memory.target) {
+		var target = Game.getObjectById(context.actor.memory.target);
+		if (target && context.actor[action](target) == OK) {
+			return btree.SUCCESS;
+		}
 	}
 	return btree.FAILURE;
 });
@@ -87,14 +90,19 @@ var creep_resource_action_stack = (action, resource_type) => with_stack_value(fu
 	return btree.FAILURE;
 });
 var creep_resource_action_target = (action, resource_type) => btree.builders.context_operation(function(context) {
-	if (context.actor.memory.target && context.actor[action](context.actor.memory.target, resource_type) == OK) {
-		return btree.SUCCESS;
+	if (context.actor.memory.target) {
+		var target = Game.getObjectById(context.actor.memory.target);
+		if (context.actor[action](target) == OK) {
+			return btree.SUCCESS;
+		}
 	}
 	return btree.FAILURE;
 });
 
 var creep_empty_energy = new (creep_status(creep => creep.carry.energy == 0));
 var creep_not_full_energy = new (creep_status(creep => creep.carry.energy < creep.carryCapacity));
+var creep_has_target = new (creep_status(creep => creep.memory.target != undefined));
+var creep_fill_target = (func) => new btree.composites.select([creep_has_target, new (save_memory_key('target', func))]);
 var creep_harvest_stack = new (creep_action_stack('harvest'));
 var creep_upgrade_stack = new (creep_action_stack('upgradeController'));
 var creep_transfer_stack = new (creep_resource_action_stack('transfer', RESOURCE_ENERGY));
@@ -114,11 +122,12 @@ var creep_drop_energy = new (btree.builders.context_operation(function(context) 
 	return btree.SUCCESS;
 }));
 
-var pop_stack_to_target_memory = new (save_memory_key('target', function(context) {
+var pop_stack_to_target_memory = creep_fill_target(function(context) {
 	if (context.stack && context.stack.length > 0) {
-		return context.stack.pop();
+		var val = context.stack.pop();
+		return val.id;
 	}
-}));
+});
 
 var adjacent_to_stack = new (with_stack_value(function(context, target) {
 	if (context.actor.pos.inRangeTo(target, 2)) {
@@ -132,6 +141,8 @@ module.exports = {
 	creep : {
 		empty_energy : creep_empty_energy,
 		not_full_energy : creep_not_full_energy,
+		has_target : creep_has_target,
+		fill_target : creep_fill_target,
 		harvest_stack : creep_harvest_stack,
 		upgrade_stack : creep_upgrade_stack,
 		withdraw_stack : creep_withdraw_stack,
