@@ -1,5 +1,4 @@
 var _ = require('lodash');
-//
 
 var SUCCESS = 'SUCCESS';
 var RUNNING = 'RUNNING';
