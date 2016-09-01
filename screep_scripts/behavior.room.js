@@ -39,6 +39,11 @@ var spawn_creep_pop_stack = new (btree.builders.context_operation(function(conte
 	
 }));
 
+var renew_all_adjacent = new (btree.builders.context_operation(function(context) {
+	_.forEach(Game.creeps, (creep) => context.actor.renewCreep);
+	return btree.SUCCESS;
+}));
+
 var push_harvester_description = new (sbehave.push_stack_value(function(context) {
 	return {
 		body : [WORK, WORK, CARRY, MOVE],
@@ -62,7 +67,7 @@ var if_not_five_upgrader_build_upgrader = new btree.composites.sequence(
 	[new btree.decorators.inverter(at_least_five_upgraders), push_upgrader_description, spawn_creep_pop_stack]);
 
 var spawn_harvesters_then_upgraders = new btree.composites.select(
-	[if_not_maxed_out_build_harvesters, if_not_five_upgrader_build_upgrader]);
+	[if_not_maxed_out_build_harvesters, if_not_five_upgrader_build_upgrader, renew_all_adjacent]);
 
 module.exports = {
 	simple_spawn : function(spawn) {
