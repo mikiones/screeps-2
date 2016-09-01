@@ -40,7 +40,11 @@ var spawn_creep_pop_stack = new (btree.builders.context_operation(function(conte
 }));
 
 var renew_all_adjacent = new (btree.builders.context_operation(function(context) {
-	_.forEach(Game.creeps, (creep) => context.actor.renewCreep);
+	_.forEach(Game.creeps, function(creep) {
+		if (creep.ticksToLive < 1000) {
+			context.actor.renewCreep(creep);
+		}
+	});
 	return btree.SUCCESS;
 }));
 
