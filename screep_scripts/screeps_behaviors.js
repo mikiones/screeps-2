@@ -5,10 +5,14 @@ function create_context(actor, game) {
 }
 
 var push_stack_value = func => btree.builders.context_operation(function(context) {
+	var val = func(context);
+	if (val == null) {
+		return btree.FAILURE;
+	}
 	if (context.stack) {
-		context.stack.push(func(context));
+		context.stack.push(val);
 	} else {
-		context.stack = [func(context)];
+		context.stack = [val];
 	}
 	return btree.SUCCESS;
 });
@@ -47,17 +51,26 @@ function get_nearest_source(context) {
 	var target = context.actor.pos.findClosestByPath(FIND_SOURCES);
 	return target;
 }
+
 function get_nearest_spawn(context) {
 	var target = context.actor.pos.findClosestByPath(FIND_MY_SPAWNS);
 	return target;
 }
+
+function get_nearest_dropped_energy(context) {
+	var target = context.actor.pos.findClosestByPath(FIND_DROPPED_ENERGY);
+	return target;
+}
+
 function get_room_controller(context) {
 	var target = context.actor.room.controller;
 	return target;
 }
+
 var push_nearest_source = new (push_stack_value(get_nearest_source));
 var push_nearest_spawn = new (push_stack_value(get_nearest_spawn));
-var push_room_controller  = new (push_stack_value(get_room_controller));
+var push_room_controller = new (push_stack_value(get_room_controller));
+var push_nearest_dropped_energy = new (push_stack_value(get_nearest_dropped_energy));
 
 var actor_status = (func) => btree.builders.context_operation(function(context) {
 	if (func(context.actor)) {
@@ -166,6 +179,7 @@ module.exports = {
 	pop_stack_to_target_memory : pop_stack_to_target_memory,
 	push_nearest_spawn : push_nearest_spawn,
 	push_nearest_source : push_nearest_source,
+	push_nearest_dropped_energy : push_nearest_dropped_energy,
 	push_room_controller : push_room_controller,
 	push_stack_value : push_stack_value,
 	pop_stack : pop_stack,
