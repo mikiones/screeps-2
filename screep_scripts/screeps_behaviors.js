@@ -1,7 +1,7 @@
 var btree = require('behavior_tree');
 
 function create_context(actor, game) {
-	return {actor : actor, game : game}
+	return {actor : actor, game : game, stack : []}
 }
 
 var push_stack_value = func => btree.builders.context_operation(function(context) {
