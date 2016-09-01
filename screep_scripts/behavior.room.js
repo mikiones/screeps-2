@@ -61,7 +61,7 @@ var if_not_maxed_out_build_harvesters = new btree.composites.sequence(
 var if_not_five_upgrader_build_upgrader = new btree.composites.sequence(
 	[new btree.decorators.inverter(at_least_five_upgraders), push_upgrader_description, spawn_creep_pop_stack]);
 
-var spawn_harvesters_then_upgraders = new btree.composites.sequence(
+var spawn_harvesters_then_upgraders = new btree.composites.select(
 	[if_not_maxed_out_build_harvesters, if_not_five_upgrader_build_upgrader]);
 
 module.exports = {

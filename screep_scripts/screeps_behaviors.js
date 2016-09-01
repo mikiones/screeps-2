@@ -114,9 +114,10 @@ var actor_resource_action_target = (action, resource_type) => btree.builders.con
 
 var creep_empty_energy = new (actor_status(creep => creep.carry.energy == 0));
 var creep_not_full_energy = new (actor_status(creep => creep.carry.energy < creep.carryCapacity));
-var creep_has_target = new (actor_status(creep => creep.memory.target != undefined));
+var creep_has_target = new (actor_status(creep => creep.memory.target != undefined && Game.getObjectById(creep.memory.target)));
 var creep_fill_target = (func) => new btree.composites.select([creep_has_target, new (save_memory_key('target', func))]);
 var creep_harvest_stack = new (actor_action_stack('harvest'));
+var creep_pickup_stack = new (actor_action_stack('pickup'));
 var creep_upgrade_stack = new (actor_action_stack('upgradeController'));
 var creep_transfer_stack = new (actor_resource_action_stack('transfer', RESOURCE_ENERGY));
 var creep_withdraw_stack = new (actor_resource_action_stack('withdraw', RESOURCE_ENERGY));
@@ -127,6 +128,7 @@ var creep_harvest_target = new (actor_action_target('harvest'));
 var creep_upgrade_target = new (actor_action_target('upgradeController'));
 var creep_transfer_target = new (actor_resource_action_target('transfer', RESOURCE_ENERGY));
 var creep_withdraw_target = new (actor_resource_action_target('withdraw', RESOURCE_ENERGY));
+var creep_pickup_target = new (actor_action_target('pickup'));
 var creep_move_to_target = new (actor_action_target('moveTo'));
 var creep_succeeding_move_to_target = new btree.decorators.always_succeed(creep_move_to_target);
 
@@ -157,6 +159,7 @@ module.exports = {
 		has_target : creep_has_target,
 		fill_target : creep_fill_target,
 		harvest_stack : creep_harvest_stack,
+		pickup_stack : creep_pickup_stack,
 		upgrade_stack : creep_upgrade_stack,
 		withdraw_stack : creep_withdraw_stack,
 		transfer_stack : creep_transfer_stack,
@@ -165,6 +168,7 @@ module.exports = {
 		harvest_target : creep_harvest_target,
 		upgrade_target : creep_upgrade_target,
 		withdraw_target : creep_withdraw_target,
+		pickup_target : creep_pickup_target,
 		transfer_target : creep_transfer_target,
 		move_to_target : creep_move_to_target,
 		succeeding_move_to_target : creep_succeeding_move_to_target,

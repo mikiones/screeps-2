@@ -24,5 +24,5 @@ module.exports.loop = function() {
 	cleanCreepMemory();
 	_.forEach(Game.rooms, room => room.cleanSources());
 	_.forEach(Game.spawns, room_behavior.simple_spawn);
-	_.forEach(_.filter(Game.creeps, {fatigue : 0, spawning : false}), harvester_behavior.simple);
+	_.forEach(_.filter(Game.creeps, {fatigue : 0, spawning : false}), creep_behavior);
 }
