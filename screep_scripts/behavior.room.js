@@ -31,7 +31,7 @@ var spawn_creep_pop_stack = new (btree.builders.context_operation(function(conte
 		context.actor.memory.spawning = false;
 		return btree.SUCCESS;
 	}
-	if (context.actor.createCreep(creepDescription.body, creepDescription.name, creepDescription.memory) == OK) {
+	if (context.actor.createCreep(creepDescription.body, creepDescription.name, creepDescription.memory) == creepDescription.name) {
 		context.actor.memory.spawning = true;
 		return btree.RUNNING;
 	}
