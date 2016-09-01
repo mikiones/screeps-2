@@ -12,16 +12,12 @@ function make_id(count) {
 
 var maxed_out_harvesters = new (sbehave.actor_status(function(actor) {
 	var sources = actor.room.find(FIND_SOURCES);
-	for (var i in sources) {
-		if (sources[i].availablePositions() > 0) {
-			return false;
-		}
-	}
-	return true;
+	var positions = _.reduce(sources, (result, source) => result + source.availablePositions(), 0);
+	return positions <= 0;
 }));
 
-var spawn_creep_pop_stack = new btree.builders.context_operation(function(context) {
-	if (context.stack.length < 1) {
+var spawn_creep_pop_stack = new (btree.builders.context_operation(function(context) {
+	if (!context.stack || context.stack.length < 1) {
 		return btree.FAILURE;
 	}
 	var creepDescription = context.stack.pop();
@@ -37,7 +33,7 @@ var spawn_creep_pop_stack = new btree.builders.context_operation(function(contex
 	}
 	return btree.FAILURE;
 	
-});
+}));
 
 var push_harvester_description = new (sbehave.push_stack_value(function(context) {
 	return {

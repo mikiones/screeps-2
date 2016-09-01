@@ -130,7 +130,7 @@ var pop_stack_to_target_memory = creep_fill_target(function(context) {
 });
 
 var adjacent_to_stack = new (with_stack_value(function(context, target) {
-	if (context.actor.pos.inRangeTo(target, 2)) {
+	if (context.actor.pos.inRangeTo(target, 1)) {
 		return btree.SUCCESS;
 	}
 	return btree.FAILURE;
