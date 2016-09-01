@@ -16,8 +16,8 @@ var maxed_out_harvesters = new (sbehave.actor_status(function(actor) {
 	return positions <= 0;
 }));
 
-var at_least_five_upgraders = new (sbehave.actor_status(function(actor) {
-	return actor.room.creepsOfRole('upgrader').length >= 5;
+var at_least_three_upgraders = new (sbehave.actor_status(function(actor) {
+	return actor.room.creepsOfRole('upgrader').length >= 3;
 }));
 
 var spawn_creep_pop_stack = new (btree.builders.context_operation(function(context) {
@@ -67,11 +67,11 @@ var push_upgrader_description = new (sbehave.push_stack_value(function(context) 
 var if_not_maxed_out_build_harvesters = new btree.composites.sequence(
 	[new btree.decorators.inverter(maxed_out_harvesters), push_harvester_description, spawn_creep_pop_stack]);
 
-var if_not_five_upgrader_build_upgrader = new btree.composites.sequence(
-	[new btree.decorators.inverter(at_least_five_upgraders), push_upgrader_description, spawn_creep_pop_stack]);
+var if_not_three_upgrader_build_upgrader = new btree.composites.sequence(
+	[new btree.decorators.inverter(at_least_three_upgraders), push_upgrader_description, spawn_creep_pop_stack]);
 
 var spawn_harvesters_then_upgraders = new btree.composites.select(
-	[if_not_maxed_out_build_harvesters, if_not_five_upgrader_build_upgrader, renew_all_adjacent]);
+	[if_not_maxed_out_build_harvesters, if_not_three_upgrader_build_upgrader, renew_all_adjacent]);
 
 module.exports = {
 	simple_spawn : function(spawn) {
