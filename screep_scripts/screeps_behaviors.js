@@ -47,6 +47,17 @@ var save_memory_key = (key, func) => btree.builders.context_operation(function(c
 	return btree.SUCCESS;
 });
 
+var push_func_on_memory_key = (key, func) => btree.builders.context_operation(function(context) {
+	if (context.actor.memory[key]) {
+		var val = func(key);
+		if (val) {
+			context.stack.push(func(key));
+			return btree.SUCCESS;
+		}
+	}
+	return btree.FAILURE;
+});
+
 function get_nearest_source(context) {
 	var target = context.actor.pos.findClosestByPath(FIND_SOURCES);
 	return target;
@@ -179,6 +190,7 @@ module.exports = {
 	actor_status : actor_status,
 	adjacent_to_stack : adjacent_to_stack,
 	save_memory_key : save_memory_key,
+	push_func_on_memory_key : push_func_on_memory_key,
 	with_stack_value : with_stack_value,
 	pop_stack_to_target_memory : pop_stack_to_target_memory,
 	push_nearest_spawn : push_nearest_spawn,

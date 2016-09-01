@@ -15,6 +15,15 @@ function get_most_empty_source(context) {
 	return target;
 };
 
+function get_nearest_nonempty_container(context) {
+	var target = context.actor.pos.findClosestByPath(FIND_STRUCTURES, {filter : function(struct) {
+		return struct.structureType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity;
+	}});
+	return target;
+};
+
+var set_nearest_nonempty_container_container_target = new (sbehave.save_memory_key('container_target', get_nearest_nonempty_container));
+
 var register_harvester_stack = new (sbehave.with_stack_value(function(context, target) {
 	target.registerHarvester(context.actor);
 	return btree.SUCCESS;
