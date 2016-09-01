@@ -10,7 +10,7 @@ Source.prototype.cleanHarvesters = function() {
 	if (!this.room.memory.sources[this.id]) {
 		this.room.memory.sources[this.id] = {};
 	}
-	_.forEach(this.room.memory.sources[this.id], function(work_count, creep_id) {
+	_.forEach(this.room.memory.sources[this.id], (work_count, creep_id) => {
 		var target = Game.getObjectById(creep_id);
 		if (!target || !Game.creeps[target.name]) {
 			this.room.memory.sources[this.id][creep_id] = undefined;
