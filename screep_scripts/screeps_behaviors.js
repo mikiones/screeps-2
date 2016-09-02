@@ -289,4 +289,5 @@ module.exports = {
 	move_to_container_target : move_to_container_target,
 	pop_stack_id_to_key : pop_stack_id_to_key,
 	key_is_object_id : key_is_object_id,
+	actor_action_key : actor_action_key,
 };
