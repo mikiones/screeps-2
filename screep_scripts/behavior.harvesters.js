@@ -19,10 +19,13 @@ function get_nearest_nonempty_container(context) {
 	var target = context.actor.pos.findClosestByPath(FIND_STRUCTURES, {filter : function(struct) {
 		return struct.structureType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity;
 	}});
-	return target.id;
+	if (target) {
+		return target.id;
+	}
+	return null;
 };
 
-var set_nearest_nonempty_container_container_target = new (sbehave.clear_memory_key('container_target'));
+var set_nearest_nonempty_container_container_target = new (sbehave.save_memory_key('container_target', get_nearest_nonempty_container));
 var needs_new_container_target = new (sbehave.actor_status(function(creep) {
 	if (!creep.memory.container_target) {
 		return true;

@@ -43,8 +43,9 @@ var save_memory_key = (key, func) => btree.builders.context_operation(function(c
 	var res = func(context);
 	if (res) {
 		context.actor.memory[key] = res;
+		return btree.SUCCESS;
 	}
-	return btree.SUCCESS;
+	return btree.FAILURE;
 });
 
 var clear_memory_key = (key) => btree.builders.context_operation(function(context) {
