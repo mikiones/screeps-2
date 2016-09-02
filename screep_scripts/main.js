@@ -2,6 +2,7 @@ require('extended_functionality');
 
 var harvester_behavior = require('behavior.harvesters');
 var upgrader_behavior = require('behavior.upgraders');
+var builder_behavior = require('behavior.builders');
 var room_behavior = require('behavior.room');
 
 function creep_behavior(creep) {
@@ -9,6 +10,8 @@ function creep_behavior(creep) {
 		harvester_behavior.simple(creep);
 	} else if (creep.memory.role == 'upgrader') {
 		upgrader_behavior.simple(creep);
+	} else if (creep.memory.role == 'builder') {
+		builder_behavior.simple(creep);
 	}
 }
 

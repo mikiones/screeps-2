@@ -143,6 +143,7 @@ var creep_succeeding_move_to_stack = new btree.decorators.always_succeed(creep_m
 
 var creep_harvest_target = new (actor_action_target('harvest'));
 var creep_upgrade_target = new (actor_action_target('upgradeController'));
+var creep_build_target = new (actor_action_target('build'));
 var creep_transfer_target = new (actor_resource_action_target('transfer', RESOURCE_ENERGY));
 var creep_withdraw_target = new (actor_resource_action_target('withdraw', RESOURCE_ENERGY));
 var creep_pickup_target = new (actor_action_target('pickup'));
@@ -273,6 +274,7 @@ module.exports = {
 		succeeding_move_to_stack : creep_succeeding_move_to_stack,
 		harvest_target : creep_harvest_target,
 		upgrade_target : creep_upgrade_target,
+		build_target : creep_build_target,
 		withdraw_target : creep_withdraw_target,
 		pickup_target : creep_pickup_target,
 		transfer_target : creep_transfer_target,
