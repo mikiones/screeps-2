@@ -55,9 +55,9 @@ var clear_memory_key = (key) => btree.builders.context_operation(function(contex
 
 var push_func_on_memory_key = (key, func) => btree.builders.context_operation(function(context) {
 	if (context.actor.memory[key]) {
-		var val = func(key);
+		var val = func(context.actor.memory[key]);
 		if (val) {
-			context.stack.push(func(key));
+			context.stack.push(val);
 			return btree.SUCCESS;
 		}
 	}
