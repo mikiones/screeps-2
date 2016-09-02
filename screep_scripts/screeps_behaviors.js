@@ -168,6 +168,36 @@ var adjacent_to_stack = new (with_stack_value(function(context, target) {
 	return btree.FAILURE;
 }));
 
+function get_nearest_nonempty_container(context) {
+	var target = context.actor.pos.findClosestByPath(FIND_STRUCTURES, {filter : function(struct) {
+		return struct.structureType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity;
+	}});
+	if (target) {
+		return target.id;
+	}
+	return null;
+};
+
+var set_nearest_nonempty_container_container_target = new (save_memory_key('container_target', get_nearest_nonempty_container));
+var needs_new_container_target = new (actor_status(function(creep) {
+	if (!creep.memory.container_target) {
+		return true;
+	}
+	var target = Game.getObjectById(creep.memory.container_target);
+	return !target || !target.structureType || target.structureType != STRUCTURE_CONTAINER || target.store.energy >= target.storeCapacity;
+}));
+var set_nonempty_container_target = new btree.composites.sequence(
+	[new btree.decorators.always_succeed(needs_new_container_target), set_nearest_nonempty_container_container_target]);
+var move_to_container_target = new (btree.builders.context_operation(function(context) {
+	if (context.actor.memory.container_target) {
+		var target = Game.getObjectById(context.actor.memory.container_target);
+		if (context.actor.moveTo(target) == OK) {
+			return btree.SUCCESS;
+		}
+	}
+	return btree.FAILURE;
+}));
+
 module.exports = {
 	create_context : create_context,
 	creep : {
@@ -206,4 +236,7 @@ module.exports = {
 	push_room_controller : push_room_controller,
 	push_stack_value : push_stack_value,
 	pop_stack : pop_stack,
+	set_nonempty_container_target : set_nonempty_container_target,
+	needs_new_container_target : needs_new_container_target,
+	move_to_container_target : move_to_container_target,
 };

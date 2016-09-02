@@ -27,8 +27,8 @@ Source.prototype.registerHarvester = function(creep) {
 	}
 	if (!this.room.memory.sources[this.id][creep.id]) {
 		var max_allowed = this.harvestingPositions();
+		this.room.memory.sources[this.id][creep.id] = creep.getActiveBodyparts(WORK);
 		if (max_allowed > _.size(this.room.memory.sources[this.id])) {
-			this.room.memory.sources[this.id][creep.id] = creep.getActiveBodyparts(WORK);
 			return true;
 		}
 	}

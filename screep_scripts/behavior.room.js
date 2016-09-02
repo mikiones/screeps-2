@@ -64,6 +64,14 @@ var push_upgrader_description = new (sbehave.push_stack_value(function(context) 
 	};
 }));
 
+var push_builder_description = new (sbehave.push_stack_value(function(context) {
+	return {
+		body : [WORK, CARRY, CARRY, MOVE, MOVE],
+		name : 'builder:' + make_id(16),
+		memory : {role : 'builder'},
+	};
+}));
+
 var if_not_maxed_out_build_harvesters = new btree.composites.sequence(
 	[new btree.decorators.inverter(maxed_out_harvesters), push_harvester_description, spawn_creep_pop_stack]);
 
@@ -71,7 +79,7 @@ var if_not_three_upgrader_build_upgrader = new btree.composites.sequence(
 	[new btree.decorators.inverter(at_least_three_upgraders), push_upgrader_description, spawn_creep_pop_stack]);
 
 var spawn_harvesters_then_upgraders = new btree.composites.select(
-	[if_not_maxed_out_build_harvesters, if_not_three_upgrader_build_upgrader, renew_all_adjacent]);
+	[if_not_maxed_out_build_harvesters, if_not_three_upgrader_build_upgrader]);
 
 module.exports = {
 	simple_spawn : function(spawn) {
