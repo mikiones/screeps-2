@@ -56,10 +56,10 @@ var assign_source = new btree.composites.select(
 var transfer_container = new btree.composites.select(
 	[valid_transfer_container, update_transfer_container]);
 
-var harvest_or_move = new btree.composites.skip_running(
+var harvest_or_move = new btree.composites.select_skip_running(
 	[sbehave.creep.harvest_key('assigned_source'), sbehave.creep.succeeding_move_to_key('assigned_source')]);
 
-var transfer_or_move = new btree.composites.skip_running(
+var transfer_or_move = new btree.composites.select_skip_running(
 	[sbehave.creep.transfer_key('transfer_container'), sbehave.creep.succeeding_move_to_key('transfer_container')]);
 
 var assign_and_harvest_source = new btree.composites.sequence(

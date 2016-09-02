@@ -89,7 +89,7 @@ class select extends Composite {
 	}
 };
 
-class skip_running extends Composite {
+class sequence_skip_running extends Composite {
 	constructor(children) {
 		var behavior = function(context) {
 			if(this.children.length == 0) {
@@ -108,6 +108,29 @@ class skip_running extends Composite {
 				return RUNNING;
 			}
 			return SUCCESS;
+		};
+		super(behavior, children);
+	}
+};
+class select_skip_running extends Composite {
+	constructor(children) {
+		var behavior = function(context) {
+			if(this.children.length == 0) {
+				return SUCCESS;
+			}
+			var encountered_running = false;
+			for (var i = this.index; i < this.children.length; i++) {
+				var branch_res = this.children[i].run(context);
+				if (branch_res == RUNNING) {
+					encountered_running = true;
+				} else if (branch_res == SUCCESS) {
+					return SUCCESS;
+				}
+			}
+			if (encountered_running) {
+				return RUNNING;
+			}
+			return FAILURE;
 		};
 		super(behavior, children);
 	}
@@ -173,7 +196,8 @@ module.exports = {
 	composites : {
 		select : select,
 		sequence : sequence,
-		skip_running : skip_running,
+		select_skip_running : select_skip_running,
+		sequence_skip_running : sequence_skip_running,
 	},
 	builders : {
 		node_builder : node_builder,
