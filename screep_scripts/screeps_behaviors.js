@@ -235,7 +235,7 @@ var withdraw_or_move_to_container = new btree.composites.select(
 	[withdraw_container_target, new btree.decorators.always_succeed(move_to_container_target)]);
 
 var withdraw_from_container = new btree.composites.sequence(
-	[set_nonfull_container_target, new btree.decorators.inverter(needs_new_nonfull_container_store_target), withdraw_or_move_to_container]);
+	[set_nonempty_container_target, new btree.decorators.inverter(needs_new_nonempty_container_store_target), withdraw_or_move_to_container]);
 
 var withdraw_or_move = new btree.composites.select(
 	[creep_withdraw_stack, creep_succeeding_move_to_stack]);
