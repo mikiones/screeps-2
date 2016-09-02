@@ -20,6 +20,10 @@ var at_least_three_upgraders = new (sbehave.actor_status(function(actor) {
 	return actor.room.creepsOfRole('upgrader').length >= 3;
 }));
 
+var at_least_three_builders = new (sbehave.actor_status(function(actor) {
+	return actor.room.creepsOfRole('builder').length >= 3;
+}));
+
 var spawn_creep_pop_stack = new (btree.builders.context_operation(function(context) {
 	if (!context.stack || context.stack.length < 1) {
 		return btree.FAILURE;
@@ -78,12 +82,15 @@ var if_not_maxed_out_build_harvesters = new btree.composites.sequence(
 var if_not_three_upgrader_build_upgrader = new btree.composites.sequence(
 	[new btree.decorators.inverter(at_least_three_upgraders), push_upgrader_description, spawn_creep_pop_stack]);
 
-var spawn_harvesters_then_upgraders = new btree.composites.select(
-	[if_not_maxed_out_build_harvesters, if_not_three_upgrader_build_upgrader]);
+var if_not_three_builders_build_builder = new btree.composites.sequence(
+	[new btree.decorators.inverter(at_least_three_builders), push_builder_description, spawn_creep_pop_stack]);
+
+var spawn_harvesters_then_upgraders_then_builders = new btree.composites.select(
+	[if_not_maxed_out_build_harvesters, if_not_three_upgrader_build_upgrader, if_not_three_builders_build_builder]);
 
 module.exports = {
 	simple_spawn : function(spawn) {
 		var context = sbehave.create_context(spawn, Game);
-		spawn_harvesters_then_upgraders.run(context);
+		spawn_harvesters_then_upgraders_then_builders.run(context);
 	},
 };
