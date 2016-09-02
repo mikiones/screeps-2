@@ -1,6 +1,13 @@
 var btree = require('behavior_tree');
 var sbehave = require('screeps_behaviors');
 
+var source_target = {
+	condition_node : null,
+	update_node : null,
+	action_node : null,
+	move_node : null,
+};
+
 var actor_status_key = (key, func) => sbehave.actor_status(actor => func(actor.memory[key]));
 var transfer_container_nonfull = new (actor_status_key('transfer_container', function(container_id) {
 	var tc = Game.getObjectById(container_id);
@@ -60,6 +67,14 @@ var assign_and_harvest_source = new btree.composites.sequence(
 
 var transfer_container_and_transfer = new btree.composites.sequence(
 	[transfer_container, transfer_or_move]);
+
+function create_target_action(condition_node, update_target_node, action_node) {
+	var children = [update_target_node, action_node];
+	if (condition_node) {
+		children.unshift(condition_node);
+	}
+	return new btree.composites.sequence(children);
+}
 
 module.exports = {
 	harvest : assign_and_harvest_source,
