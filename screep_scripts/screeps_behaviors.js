@@ -139,13 +139,16 @@ var creep_move_to_stack = new (actor_action_stack('moveTo'));
 var creep_succeeding_move_to_stack = new btree.decorators.always_succeed(creep_move_to_stack);
 
 var creep_harvest_target = new (actor_action_target('harvest'));
+var creep_harvest_key = key => new (actor_action_key(key, 'harvest'));
 var creep_upgrade_target = new (actor_action_target('upgradeController'));
 var creep_build_target = new (actor_action_target('build'));
 var creep_transfer_target = new (actor_resource_action_target('transfer', RESOURCE_ENERGY));
 var creep_withdraw_target = new (actor_resource_action_target('withdraw', RESOURCE_ENERGY));
 var creep_pickup_target = new (actor_action_target('pickup'));
 var creep_move_to_target = new (actor_action_target('moveTo'));
+var creep_move_to_key = key => new (actor_action_key(key, 'moveTo'));
 var creep_succeeding_move_to_target = new btree.decorators.always_succeed(creep_move_to_target);
+var creep_succeeding_move_to_key = key => new btree.decorators.always_succeed(creep_move_to_key(key));
 
 var creep_drop_energy = new (btree.builders.context_operation(function(context) {
 	context.actor.drop(RESOURCE_ENERGY);
@@ -183,6 +186,10 @@ function get_nearest_nonempty_container(context) {
 
 var set_nearest_nonfull_container_target = new (save_memory_key('container_target', get_nearest_nonfull_container));
 var set_nearest_nonempty_container_target = new (save_memory_key('container_target', get_nearest_nonempty_container));
+
+var key_is_object_id = (key) => actor_status(function(actor) {
+	return actor.memory[key] && Game.getObjectById(actor.memory[key]);
+});
 
 var needs_new_nonfull_container_store_target = new (actor_status(function(creep) {
 	if (!creep.memory.container_target) {
@@ -257,13 +264,16 @@ module.exports = {
 		move_to_stack : creep_move_to_stack,
 		succeeding_move_to_stack : creep_succeeding_move_to_stack,
 		harvest_target : creep_harvest_target,
+		harvest_key : creep_harvest_key,
 		upgrade_target : creep_upgrade_target,
 		build_target : creep_build_target,
 		withdraw_target : creep_withdraw_target,
 		pickup_target : creep_pickup_target,
 		transfer_target : creep_transfer_target,
 		move_to_target : creep_move_to_target,
+		move_to_key: creep_move_to_key,
 		succeeding_move_to_target : creep_succeeding_move_to_target,
+		succeeding_move_to_key: creep_succeeding_move_to_key,
 		drop_energy : creep_drop_energy,
 		withdraw_from_container: withdraw_from_container,
 		nonharvest_get_energy : nonharvest_get_energy,
@@ -276,6 +286,7 @@ module.exports = {
 	clear_memory_key : clear_memory_key,
 	push_func_on_memory_key : push_func_on_memory_key,
 	with_stack_value : with_stack_value,
+	with_pop_stack_value : with_stack_value,
 	push_nearest_spawn : push_nearest_spawn,
 	push_nearest_source : push_nearest_source,
 	push_nearest_dropped_energy : push_nearest_dropped_energy,
@@ -286,4 +297,5 @@ module.exports = {
 	needs_new_nonfull_container_store_target : needs_new_nonfull_container_store_target,
 	move_to_container_target : move_to_container_target,
 	pop_stack_id_to_key : pop_stack_id_to_key,
+	key_is_object_id : key_is_object_id,
 };
