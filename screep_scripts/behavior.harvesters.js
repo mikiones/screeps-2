@@ -19,10 +19,20 @@ function get_nearest_nonempty_container(context) {
 	var target = context.actor.pos.findClosestByPath(FIND_STRUCTURES, {filter : function(struct) {
 		return struct.structureType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity;
 	}});
-	return target;
+	return target.id;
 };
 
-var set_nearest_nonempty_container_container_target = new (sbehave.save_memory_key('container_target', get_nearest_nonempty_container));
+var set_nearest_nonempty_container_container_target = new (sbehave.clear_memory_key('container_target'));
+var needs_new_container_target = new (sbehave.actor_status(function(creep) {
+	if (!creep.memory.container_target) {
+		return true;
+	}
+	var target = Game.getObjectById(creep.memory.container_target);
+	return !target || !target.structureType || target.structureType != STRUCTURE_CONTAINER || target.store.energy >= target.storeCapacity;
+}));
+
+var set_container_target = new btree.composites.sequence(
+	[needs_new_container_target, set_nearest_nonempty_container_container_target]);
 
 var register_harvester_stack = new (sbehave.with_stack_value(function(context, target) {
 	target.registerHarvester(context.actor);

@@ -47,6 +47,11 @@ var save_memory_key = (key, func) => btree.builders.context_operation(function(c
 	return btree.SUCCESS;
 });
 
+var clear_memory_key = (key) => btree.builders.context_operation(function(context) {
+	context.actor.memory[key] = null;
+	return btree.SUCCESS;
+});
+
 var push_func_on_memory_key = (key, func) => btree.builders.context_operation(function(context) {
 	if (context.actor.memory[key]) {
 		var val = func(key);
@@ -190,6 +195,7 @@ module.exports = {
 	actor_status : actor_status,
 	adjacent_to_stack : adjacent_to_stack,
 	save_memory_key : save_memory_key,
+	clear_memory_key : clear_memory_key,
 	push_func_on_memory_key : push_func_on_memory_key,
 	with_stack_value : with_stack_value,
 	pop_stack_to_target_memory : pop_stack_to_target_memory,

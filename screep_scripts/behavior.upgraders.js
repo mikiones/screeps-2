@@ -17,7 +17,7 @@ var pickup_nearest_dropped_energy = new btree.composites.sequence(
 	[sbehave.push_nearest_dropped_energy, pickup_or_move, sbehave.pop_stack]);
 
 var pickup_dropped_energy = new btree.composites.sequence(
-	[sbehave.creep.empty_energy, pickup_nearest_dropped_energy, withdraw_energy]);
+	[sbehave.creep.empty_energy, new btree.decorators.always_succeed(pickup_nearest_dropped_energy), withdraw_energy]);
 
 var upgrade_or_move = new btree.composites.select(
 	[sbehave.creep.upgrade_stack, sbehave.creep.succeeding_move_to_stack]);
