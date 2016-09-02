@@ -94,47 +94,35 @@ var actor_status = (func) => btree.builders.context_operation(function(context) 
 	return btree.FAILURE;
 });
 
-var actor_action_stack = (action) => with_stack_value(function(context, target) {
-	if (context.actor[action](target) == OK) {
+function run_action(context, action, target, resource_type = null) {
+	var result = context.actor[action](target, resource_type);
+	if (result == OK) {
 		return btree.SUCCESS;
+	} else if (result == ERR_NOT_IN_RANGE) {
+		return btree.RUNNING;
 	}
 	return btree.FAILURE;
+}
+
+var actor_action_stack = (action, resource_type = null) => with_stack_value(function(context, target) {
+	return run_action(context, action, target, resource_type);
 });
-var actor_action_key = (key, action) => btree.builders.context_operation(function(context) {
+var actor_action_key = (key, action, resource_type = null) => btree.builders.context_operation(function(context) {
 	if (context.actor.memory[key]) {
 		var target = Game.getObjectById(context.actor.memory[key]);
-		if (target && context.actor[action](target) == OK) {
-			return btree.SUCCESS;
-		}
+		return run_action(context, action, target, resource_type);
 	}
 	return btree.FAILURE;
 });
 var actor_action_target = _.partial(actor_action_key, 'target');
-var actor_resource_action_stack = (action, resource_type) => with_stack_value(function(context, target) {
-	if (context.actor[action](target, resource_type) == OK) {
-		return btree.SUCCESS;
-	}
-	return btree.FAILURE;
-});
-var actor_resource_action_key = (key, action, resource_type) => btree.builders.context_operation(function(context) {
-	if (context.actor.memory[key]) {
-		var target = Game.getObjectById(context.actor.memory[key]);
-		if (context.actor[action](target, resource_type) == OK) {
-			return btree.SUCCESS;
-		}
-	}
-	return btree.FAILURE;
-});
-var actor_resource_action_target = _.partial(actor_resource_action_key, 'target');
-
 var creep_empty_energy = new (actor_status(creep => creep.carry.energy == 0));
 var creep_not_full_energy = new (actor_status(creep => creep.carry.energy < creep.carryCapacity));
 var creep_has_target = new (actor_status(creep => creep.memory.target != undefined && Game.getObjectById(creep.memory.target)));
 var creep_harvest_stack = new (actor_action_stack('harvest'));
 var creep_pickup_stack = new (actor_action_stack('pickup'));
 var creep_upgrade_stack = new (actor_action_stack('upgradeController'));
-var creep_transfer_stack = new (actor_resource_action_stack('transfer', RESOURCE_ENERGY));
-var creep_withdraw_stack = new (actor_resource_action_stack('withdraw', RESOURCE_ENERGY));
+var creep_transfer_stack = new (actor_action_stack('transfer', RESOURCE_ENERGY));
+var creep_withdraw_stack = new (actor_action_stack('withdraw', RESOURCE_ENERGY));
 var creep_move_to_stack = new (actor_action_stack('moveTo'));
 var creep_succeeding_move_to_stack = new btree.decorators.always_succeed(creep_move_to_stack);
 
@@ -142,9 +130,9 @@ var creep_harvest_target = new (actor_action_target('harvest'));
 var creep_harvest_key = key => new (actor_action_key(key, 'harvest'));
 var creep_upgrade_target = new (actor_action_target('upgradeController'));
 var creep_build_target = new (actor_action_target('build'));
-var creep_transfer_target = new (actor_resource_action_target('transfer', RESOURCE_ENERGY));
-var creep_transfer_key = key => new (actor_resource_action_key(key, 'transfer', RESOURCE_ENERGY));
-var creep_withdraw_target = new (actor_resource_action_target('withdraw', RESOURCE_ENERGY));
+var creep_transfer_target = new (actor_action_target('transfer', RESOURCE_ENERGY));
+var creep_transfer_key = key => new (actor_action_key(key, 'transfer', RESOURCE_ENERGY));
+var creep_withdraw_target = new (actor_action_target('withdraw', RESOURCE_ENERGY));
 var creep_pickup_target = new (actor_action_target('pickup'));
 var creep_move_to_target = new (actor_action_target('moveTo'));
 var creep_move_to_key = key => new (actor_action_key(key, 'moveTo'));
@@ -222,7 +210,7 @@ var move_to_container_target = new (btree.builders.context_operation(function(co
 	return btree.FAILURE;
 }));
 
-var withdraw_container_target = new (actor_resource_action_key('target', 'withdraw', RESOURCE_ENERGY));
+var withdraw_container_target = new (actor_action_key('target', 'withdraw', RESOURCE_ENERGY));
 
 var withdraw_or_move_to_container = new btree.composites.select(
 	[withdraw_container_target, new btree.decorators.always_succeed(move_to_container_target)]);
