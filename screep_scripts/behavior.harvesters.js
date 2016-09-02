@@ -26,7 +26,9 @@ var transfer_container_target = new (btree.builders.context_operation(function(c
 var transfer_or_move_to_container = new btree.composites.select(
 	[transfer_container_target, new btree.decorators.always_succeed(sbehave.move_to_container_target)]);
 var transfer_to_container = new btree.composites.sequence(
-	[sbehave.set_nonempty_container_target, new btree.decorators.inverter(sbehave.needs_new_container_target), transfer_or_move_to_container]);
+	[sbehave.set_nonfull_container_target,
+	new btree.decorators.inverter(sbehave.needs_new_nonfull_container_store_target),
+	transfer_or_move_to_container]);
 
 var register_harvester_stack = new (sbehave.with_stack_value(function(context, target) {
 	target.registerHarvester(context.actor);
