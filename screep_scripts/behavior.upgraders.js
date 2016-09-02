@@ -7,8 +7,11 @@ var withdraw_or_move = new btree.composites.select(
 var withdraw_nearest_spawn = new btree.composites.sequence(
 	[sbehave.push_nearest_spawn, withdraw_or_move, sbehave.pop_stack]);
 
+var withdraw_energy_from = new btree.composites.select(
+	[sbehave.creep.withdraw_from_container, withdraw_nearest_spawn]);
+
 var withdraw_energy = new btree.composites.sequence(
-	[sbehave.creep.empty_energy, withdraw_nearest_spawn]);
+	[sbehave.creep.empty_energy, withdraw_energy_from]);
 
 var pickup_or_move = new btree.composites.select(
 	[sbehave.creep.pickup_stack, sbehave.creep.succeeding_move_to_stack]);
