@@ -236,6 +236,27 @@ var withdraw_or_move_to_container = new btree.composites.select(
 var withdraw_from_container = new btree.composites.sequence(
 	[set_nonfull_container_target, new btree.decorators.inverter(needs_new_nonfull_container_store_target), withdraw_or_move_to_container]);
 
+var withdraw_or_move = new btree.composites.select(
+	[creep_withdraw_stack, creep_succeeding_move_to_stack]);
+
+var withdraw_nearest_spawn = new btree.composites.sequence(
+	[push_nearest_spawn, withdraw_or_move, pop_stack]);
+
+var pickup_or_move = new btree.composites.select(
+	[creep_pickup_stack, creep_succeeding_move_to_stack]);
+
+var pickup_nearest_dropped_energy = new btree.composites.sequence(
+	[push_nearest_dropped_energy, pickup_or_move, pop_stack]);
+
+var collect_energy_from = new btree.composites.select(
+	[pickup_nearest_dropped_energy, withdraw_from_container, withdraw_nearest_spawn]);
+
+var collect_energy = new btree.composites.sequence(
+	[creep_empty_energy, collect_energy_from]);
+
+var nonharvest_get_energy = new btree.composites.sequence(
+	[creep_empty_energy, collect_energy]);
+
 module.exports = {
 	create_context : create_context,
 	creep : {
@@ -259,6 +280,7 @@ module.exports = {
 		succeeding_move_to_target : creep_succeeding_move_to_target,
 		drop_energy : creep_drop_energy,
 		withdraw_from_container: withdraw_from_container,
+		nonharvest_get_energy : nonharvest_get_energy,
 	},
 	room : {
 	},
