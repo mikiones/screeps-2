@@ -72,11 +72,9 @@ var harvest_or_move = key_action_or_move_node('assigned_source', sbehave.creep.h
 var transfer_or_move = key_action_or_move_node('transfer_container', sbehave.creep.transfer_key);
 
 var assign_and_harvest_source = create_target_action(sbehave.creep.not_full_energy, assign_source, harvest_or_move);
-//var assign_and_harvest_source = new btree.composites.sequence(
-//	[sbehave.creep.not_full_energy, assign_source, harvest_or_move]);
-
-var transfer_container_and_transfer = new btree.composites.sequence(
-	[transfer_container, transfer_or_move]);
+var transfer_container_and_transfer = create_target_action(null, transfer_container, transfer_or_move);
+//var transfer_container_and_transfer = new btree.composites.sequence(
+//	[transfer_container, transfer_or_move]);
 
 
 module.exports = {
