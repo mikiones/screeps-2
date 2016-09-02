@@ -64,21 +64,14 @@ var push_func_on_memory_key = (key, func) => btree.builders.context_operation(fu
 	return btree.FAILURE;
 });
 
-function get_nearest_source(context) {
-	var target = context.actor.pos.findClosestByPath(FIND_SOURCES);
+var get_nearest = type => function(context) {
+	var target = context.actor.pos.findClosestByPath(type);
 	return target;
 }
 
-function get_nearest_spawn(context) {
-	var target = context.actor.pos.findClosestByPath(FIND_MY_SPAWNS);
-	return target;
-}
-
-function get_nearest_dropped_energy(context) {
-	var target = context.actor.pos.findClosestByPath(FIND_DROPPED_ENERGY);
-	return target;
-}
-
+var get_nearest_source = get_nearest(FIND_SOURCES);
+var get_nearest_spawn = get_nearest(FIND_MY_SPAWNS);
+var get_nearest_dropped_energy = get_nearest(FIND_DROPPED_ENERGY);
 function get_room_controller(context) {
 	var target = context.actor.room.controller;
 	return target;
@@ -102,32 +95,32 @@ var actor_action_stack = (action) => with_stack_value(function(context, target) 
 	}
 	return btree.FAILURE;
 });
-
-var actor_action_target = (action) => btree.builders.context_operation(function(context) {
-	if (context.actor.memory.target) {
-		var target = Game.getObjectById(context.actor.memory.target);
+var actor_action_key = (key, action) => btree.builders.context_operation(function(context) {
+	if (context.actor.memory[key]) {
+		var target = Game.getObjectById(context.actor.memory[key]);
 		if (target && context.actor[action](target) == OK) {
 			return btree.SUCCESS;
 		}
 	}
 	return btree.FAILURE;
 });
-
+var actor_action_target = _.partial(actor_action_key, 'target');
 var actor_resource_action_stack = (action, resource_type) => with_stack_value(function(context, target) {
 	if (context.actor[action](target, resource_type) == OK) {
 		return btree.SUCCESS;
 	}
 	return btree.FAILURE;
 });
-var actor_resource_action_target = (action, resource_type) => btree.builders.context_operation(function(context) {
-	if (context.actor.memory.target) {
-		var target = Game.getObjectById(context.actor.memory.target);
+var actor_resource_action_key = (key, action, resource_type) => btree.builders.context_operation(function(context) {
+	if (context.actor.memory[key]) {
+		var target = Game.getObjectById(context.actor.memory[key]);
 		if (context.actor[action](target) == OK) {
 			return btree.SUCCESS;
 		}
 	}
 	return btree.FAILURE;
 });
+var actor_resource_action_target = _.partial(actor_resource_action_key, 'target');
 
 var creep_empty_energy = new (actor_status(creep => creep.carry.energy == 0));
 var creep_not_full_energy = new (actor_status(creep => creep.carry.energy < creep.carryCapacity));
