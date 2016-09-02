@@ -64,8 +64,13 @@ var push_func_on_memory_key = (key, func) => btree.builders.context_operation(fu
 	return btree.FAILURE;
 });
 
-var get_nearest = type => function(context) {
-	var target = context.actor.pos.findClosestByPath(type);
+var get_nearest = (type, filter = null) => function(context) {
+	var target;
+	if (filter == null) {
+		target = context.actor.pos.findClosestByPath(type);
+	} else {
+		target = context.actor.pos.findClosestByPath(type, {filter : filter});
+	}
 	return target;
 }
 
@@ -125,7 +130,6 @@ var actor_resource_action_target = _.partial(actor_resource_action_key, 'target'
 var creep_empty_energy = new (actor_status(creep => creep.carry.energy == 0));
 var creep_not_full_energy = new (actor_status(creep => creep.carry.energy < creep.carryCapacity));
 var creep_has_target = new (actor_status(creep => creep.memory.target != undefined && Game.getObjectById(creep.memory.target)));
-var creep_fill_target = (func) => new btree.composites.select([creep_has_target, new (save_memory_key('target', func))]);
 var creep_harvest_stack = new (actor_action_stack('harvest'));
 var creep_pickup_stack = new (actor_action_stack('pickup'));
 var creep_upgrade_stack = new (actor_action_stack('upgradeController'));
@@ -148,11 +152,12 @@ var creep_drop_energy = new (btree.builders.context_operation(function(context) 
 	return btree.SUCCESS;
 }));
 
-var pop_stack_to_target_memory = creep_fill_target(function(context) {
-	if (context.stack && context.stack.length > 0) {
-		var val = context.stack.pop();
-		return val.id;
+var pop_stack_id_to_key = (key) => with_pop_stack_value(function(context, target) {
+	if (target && target.id) {
+		context.actor.memory[key] = target.id;
+		btree.SUCCESS;
 	}
+	btree.FAILURE;
 });
 
 var adjacent_to_stack = new (with_stack_value(function(context, target) {
@@ -162,15 +167,10 @@ var adjacent_to_stack = new (with_stack_value(function(context, target) {
 	return btree.FAILURE;
 }));
 
-function get_nearest_nonfull_container(context) {
-	var target = context.actor.pos.findClosestByPath(FIND_STRUCTURES, {filter : function(struct) {
-		return struct.structureType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity;
-	}});
-	if (target) {
-		return target.id;
-	}
-	return null;
-};
+var get_nearest_nonfull_container = get_nearest(FIND_STRUCTURES, function(struct) {
+	return struct.structureType == STRUCTURE_CONTAINER && struct.store.energy < struct.storeCapacity;
+});
+
 function get_nearest_nonempty_container(context) {
 	var target = context.actor.pos.findClosestByPath(FIND_STRUCTURES, {filter : function(struct) {
 		return struct.structureType == STRUCTURE_CONTAINER && struct.store.energy > 50;
@@ -214,15 +214,7 @@ var move_to_container_target = new (btree.builders.context_operation(function(co
 	return btree.FAILURE;
 }));
 
-var withdraw_container_target = new(btree.builders.context_operation(function(context) {
-	if (context.actor.memory.container_target) {
-		var target = Game.getObjectById(context.actor.memory.container_target);
-		if (context.actor.withdraw(target, RESOURCE_ENERGY) == OK) {
-			return btree.SUCCESS;
-		}
-	}
-	return btree.FAILURE;
-}));
+var withdraw_container_target = new (actor_resource_action_key('target', 'withdraw', RESOURCE_ENERGY));
 
 var withdraw_or_move_to_container = new btree.composites.select(
 	[withdraw_container_target, new btree.decorators.always_succeed(move_to_container_target)]);
@@ -257,7 +249,6 @@ module.exports = {
 		empty_energy : creep_empty_energy,
 		not_full_energy : creep_not_full_energy,
 		has_target : creep_has_target,
-		fill_target : creep_fill_target,
 		harvest_stack : creep_harvest_stack,
 		pickup_stack : creep_pickup_stack,
 		upgrade_stack : creep_upgrade_stack,
@@ -285,7 +276,6 @@ module.exports = {
 	clear_memory_key : clear_memory_key,
 	push_func_on_memory_key : push_func_on_memory_key,
 	with_stack_value : with_stack_value,
-	pop_stack_to_target_memory : pop_stack_to_target_memory,
 	push_nearest_spawn : push_nearest_spawn,
 	push_nearest_source : push_nearest_source,
 	push_nearest_dropped_energy : push_nearest_dropped_energy,
@@ -295,4 +285,5 @@ module.exports = {
 	set_nonfull_container_target : set_nonfull_container_target,
 	needs_new_nonfull_container_store_target : needs_new_nonfull_container_store_target,
 	move_to_container_target : move_to_container_target,
+	pop_stack_id_to_key : pop_stack_id_to_key,
 };

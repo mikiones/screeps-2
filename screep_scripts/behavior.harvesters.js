@@ -41,7 +41,7 @@ var target_most_empty_source = new btree.composites.sequence(
 	[new btree.decorators.inverter(sbehave.creep.has_target),
 	push_most_empty_source,
 	register_harvester_stack,
-	sbehave.pop_stack_to_target_memory]);
+	new (sbehave.pop_stack_id_to_key('target'))]);
 
 var drop_if_by_stack = new btree.composites.sequence(
 	[sbehave.adjacent_to_stack, sbehave.creep.drop_energy]);
