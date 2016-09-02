@@ -119,7 +119,7 @@ var actor_resource_action_stack = (action, resource_type) => with_stack_value(fu
 var actor_resource_action_key = (key, action, resource_type) => btree.builders.context_operation(function(context) {
 	if (context.actor.memory[key]) {
 		var target = Game.getObjectById(context.actor.memory[key]);
-		if (context.actor[action](target) == OK) {
+		if (context.actor[action](target, resource_type) == OK) {
 			return btree.SUCCESS;
 		}
 	}
@@ -143,6 +143,7 @@ var creep_harvest_key = key => new (actor_action_key(key, 'harvest'));
 var creep_upgrade_target = new (actor_action_target('upgradeController'));
 var creep_build_target = new (actor_action_target('build'));
 var creep_transfer_target = new (actor_resource_action_target('transfer', RESOURCE_ENERGY));
+var creep_transfer_key = key => new (actor_resource_action_key(key, 'transfer', RESOURCE_ENERGY));
 var creep_withdraw_target = new (actor_resource_action_target('withdraw', RESOURCE_ENERGY));
 var creep_pickup_target = new (actor_action_target('pickup'));
 var creep_move_to_target = new (actor_action_target('moveTo'));
@@ -270,6 +271,7 @@ module.exports = {
 		withdraw_target : creep_withdraw_target,
 		pickup_target : creep_pickup_target,
 		transfer_target : creep_transfer_target,
+		transfer_key : creep_transfer_key,
 		move_to_target : creep_move_to_target,
 		move_to_key: creep_move_to_key,
 		succeeding_move_to_target : creep_succeeding_move_to_target,
@@ -295,6 +297,7 @@ module.exports = {
 	pop_stack : pop_stack,
 	set_nonfull_container_target : set_nonfull_container_target,
 	needs_new_nonfull_container_store_target : needs_new_nonfull_container_store_target,
+	get_nearest_nonfull_container : get_nearest_nonfull_container,
 	move_to_container_target : move_to_container_target,
 	pop_stack_id_to_key : pop_stack_id_to_key,
 	key_is_object_id : key_is_object_id,
