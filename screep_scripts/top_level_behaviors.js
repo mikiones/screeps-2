@@ -60,15 +60,6 @@ function key_action_or_move_node(key, key_action_node) {
 	return new btree.composites.select_skip_running([key_action_node(key), sbehave.creep.succeeding_move_to_key(key)]);
 }
 
-var harvest_or_move = key_action_or_move_node('assigned_source', sbehave.creep.harvest_key);
-var transfer_or_move = key_action_or_move_node('transfer_container', sbehave.creep.transfer_key);
-
-var assign_and_harvest_source = new btree.composites.sequence(
-	[sbehave.creep.not_full_energy, assign_source, harvest_or_move]);
-
-var transfer_container_and_transfer = new btree.composites.sequence(
-	[transfer_container, transfer_or_move]);
-
 function create_target_action(condition_node, update_target_node, action_node) {
 	var children = [update_target_node, action_node];
 	if (condition_node) {
@@ -76,6 +67,17 @@ function create_target_action(condition_node, update_target_node, action_node) {
 	}
 	return new btree.composites.sequence(children);
 }
+
+var harvest_or_move = key_action_or_move_node('assigned_source', sbehave.creep.harvest_key);
+var transfer_or_move = key_action_or_move_node('transfer_container', sbehave.creep.transfer_key);
+
+var assign_and_harvest_source = create_target_action(sbehave.creep.not_full_energy, assign_source, harvest_or_move);
+//var assign_and_harvest_source = new btree.composites.sequence(
+//	[sbehave.creep.not_full_energy, assign_source, harvest_or_move]);
+
+var transfer_container_and_transfer = new btree.composites.sequence(
+	[transfer_container, transfer_or_move]);
+
 
 module.exports = {
 	harvest : assign_and_harvest_source,
